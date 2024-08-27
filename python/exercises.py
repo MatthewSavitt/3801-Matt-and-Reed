@@ -14,8 +14,20 @@ def change(amount: int) -> dict[int, int]:
 
 
 # Write your first then lower case function here
-
-
+def first_then_lowercase(strings: list[str], min_length: int) -> str | None: # <-- If no string meets the minimum length, return undefined
+    # Check if strings is an array and minLength is a number
+    if not isinstance(strings, list[str]):
+        raise TypeError('strings must be a list of type str')
+    elif not isinstance(min_length, int):
+        raise TypeError('min_length must be a number')
+    # Check if the array is empty
+    if(strings.len() == 0):
+        return None
+    # Iterate through the array and find the first string with a length greater than or equal to minLength
+    for string in strings:
+        if string.len() >= min_length:
+            return string.lower()
+        
 # Write your powers generator here
 
 
