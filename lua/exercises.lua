@@ -24,6 +24,11 @@ function first_then_lower_case(strings, min_length)
   elseif #strings == 0 then
     return nil
   end
+  for _, s in ipairs(strings) do
+    if type(s) ~= "string" then
+      error("strings must be a list of type str")
+    end
+  end
   -- Iterate through the array and find the first string with a length greater than or equal to min_length
   for _, string in ipairs(strings) do
     if #string >= min_length then

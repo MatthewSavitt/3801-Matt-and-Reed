@@ -21,6 +21,10 @@ export function firstThenLowerCase(strings, minLength) {
   if (!Array.isArray(strings) || typeof minLength !== 'number') {
     throw new TypeError('Invalid arguments: strings must be an array and minLength must be a number');
   }
+  // Check if all elements in the strings array are strings
+  if (!strings.every(s => typeof s === 'string')) {
+    throw new TypeError('Invalid argument: all elements in the strings array must be strings');
+  }
   // Check if the array is empty
   if (strings.length === 0) {
     return undefined;
