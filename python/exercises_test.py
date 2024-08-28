@@ -1,7 +1,7 @@
 from exercises import (
-    # first_then_lower_case,
+    first_then_lower_case,
     # say,
-    # powers_generator,
+    powers_generator,
     # meaningful_line_count,
     # Quaternion,
     change)
@@ -38,13 +38,13 @@ expect(change(10000000000005) == {25: 400000000000, 10: 0, 5: 1, 1: 0})
 
 # Uncomment the following tests as you complete the exercises
 
-# suite("first_then_lower_case")
-# def nonempty(s): return s != ""
-# def length_greater_than_3(s): return len(s) > 3
-# expect(first_then_lower_case([], nonempty) is None)
-# expect(first_then_lower_case(["", "A", "B"], nonempty) == "a")
-# expect(first_then_lower_case(["", "A", "ABC"], length_greater_than_3) is None)
-# expect(first_then_lower_case(["ABC", "ABCD", "ABCDE"], length_greater_than_3) == "abcd")
+suite("first_then_lower_case")
+def nonempty(s): return s != ""
+def length_greater_than_3(s): return len(s) > 3
+expect(first_then_lower_case([], nonempty) is None)
+expect(first_then_lower_case(["", "A", "B"], nonempty) == "a")
+expect(first_then_lower_case(["", "A", "ABC"], length_greater_than_3) is None)
+expect(first_then_lower_case(["ABC", "ABCD", "ABCDE"], length_greater_than_3) == "abcd")
 
 # suite("say")
 # expect(say() == "")
@@ -56,18 +56,18 @@ expect(change(10000000000005) == {25: 400000000000, 10: 0, 5: 1, 1: 0})
 # expect(say("")("")("dog")("")("go")() == "  dog  go")
 # expect(say("😄🤗")("💀👊🏾")() == "😄🤗 💀👊🏾")
 
-# suite("powers_generator")
-# g1 = powers_generator(base=2, limit=1)
-# expect(next(g1) == 1)
-# expect_error(StopIteration, None, next, g1)
-# g2 = powers_generator(base=3, limit=100)
-# expect(next(g2) == 1)
-# expect(next(g2) == 3)
-# expect(next(g2) == 9)
-# expect(next(g2) == 27)
-# expect(next(g2) == 81)
-# expect_error(StopIteration, None, next, g2)
-# expect(list(powers_generator(base=3, limit=27)) == [1, 3, 9, 27])
+suite("powers_generator")
+g1 = powers_generator(base=2, limit=1)
+expect(next(g1) == 1)
+expect_error(StopIteration, None, next, g1)
+g2 = powers_generator(base=3, limit=100)
+expect(next(g2) == 1)
+expect(next(g2) == 3)
+expect(next(g2) == 9)
+expect(next(g2) == 27)
+expect(next(g2) == 81)
+expect_error(StopIteration, None, next, g2)
+expect(list(powers_generator(base=3, limit=27)) == [1, 3, 9, 27])
 
 # suite("meaningful_line_count")
 # expect_error(FileNotFoundError, 'No such file', meaningful_line_count, "no-such-file.txt")

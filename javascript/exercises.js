@@ -36,6 +36,12 @@ export function firstThenLowerCase(strings, minLength) {
 }
 
 // Write your powers generator here
+export function* powersGenerator(base, exponent) {
+  for (let power = 0; power < exponent; power++) {
+    yield base ** power;
+  }
+  yield null;
+}
 
 // Write your say function here
 
