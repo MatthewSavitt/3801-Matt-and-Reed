@@ -14,7 +14,7 @@ def change(amount: int) -> dict[int, int]:
 
 
 # Write your first then lower case function here
-def first_then_lower_case(strings: list, min_length: int) -> str: # <-- If no string meets the minimum length, return None
+def first_then_lower_case(strings: list, min_length: int) -> str: 
     # Check if strings is a list and minLength is an integer
     if not isinstance(strings, list) or not all(isinstance(s, str) for s in strings):
         raise TypeError('strings must be a list of type str')
@@ -27,6 +27,7 @@ def first_then_lower_case(strings: list, min_length: int) -> str: # <-- If no st
     for string in strings:
         if len(string) >= min_length:
             return string.lower()
+    # If no string meets the minimum length, return None
     return None
         
 # Write your powers generator here
@@ -36,7 +37,13 @@ def powers_generator(base: int, exponent: int):
     yield None
 
 # Write your say function here
-
+def say(initial_string):
+    def inner(next_string = None):
+        if next_string is None:  # Check if next_string is None, indicating termination
+            return initial_string  # Terminate and return the initial string
+        else:
+            return say(initial_string + " " + next_string) # Still going? concatenate.
+    return inner
 
 # Write your line count function here
 
