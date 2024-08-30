@@ -49,6 +49,20 @@ function powers_generator(base, exponent)
   end)
 end
 -- Write your say function here
+function say(initial_string)
+  if initial_string == nil then
+      return ""
+  end
+  function inner(next_string)
+      if next_string == nil then -- Check if next_string is None, indicating termination
+          return initial_string -- Terminate and return the initial string
+      else
+          return say(initial_string .. " " .. next_string) -- Still going? concatenate.
+      end
+  end
+  return inner
+end
+
 
 -- Write your line count function here
 

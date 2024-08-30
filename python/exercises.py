@@ -37,7 +37,9 @@ def powers_generator(base: int, exponent: int):
     yield None
 
 # Write your say function here
-def say(initial_string):
+def say(initial_string = None):
+    if initial_string is None:
+        return ""
     def inner(next_string = None):
         if next_string is None:  # Check if next_string is None, indicating termination
             return initial_string  # Terminate and return the initial string

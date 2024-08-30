@@ -48,6 +48,20 @@ export function* powersGenerator(base, exponent) {
 }
 
 // Write your say function here
+export function say(initialString) {
+  if (initialString === undefined) {
+    return "";
+  }
+  function inner(nextString) {
+    if (nextString === undefined) { // Check if next_string is None, indicating termination
+      return initialString; // Terminate and return the initial string
+    }
+    else {
+      return say(initialString.concat(" ", nextString)); // Still going? concatenate.
+    }
+  }
+  return inner
+}
 
 // Write your line count function here
 

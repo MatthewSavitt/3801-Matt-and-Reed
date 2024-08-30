@@ -2,9 +2,9 @@ import unittest
 import pytest
 from python.exercises import (
     first_then_lower_case,
-    # say,
+    say,
     powers_generator,
-    # meaningful_line_count,
+    # meaningful_line_count,s
     # Quaternion,
     change)
 
@@ -48,15 +48,15 @@ expect(first_then_lower_case(["", "A", "B"], nonempty) == "a")
 expect(first_then_lower_case(["", "A", "ABC"], length_greater_than_3) is None)
 expect(first_then_lower_case(["ABC", "ABCD", "ABCDE"], length_greater_than_3) == "abcd")
 
-# suite("say")
-# expect(say() == "")
-# expect(say("hi")() == "hi")
-# expect(say("hi")("there")() == "hi there")
-# expect(say("hello")("my")("name")("is")("Colette")() == "hello my name is Colette")
-# expect(say("h i")() == "h i")
-# expect(say("hi ")("   there")() == "hi     there")
-# expect(say("")("")("dog")("")("go")() == "  dog  go")
-# expect(say("😄🤗")("💀👊🏾")() == "😄🤗 💀👊🏾")
+suite("say")
+expect(say() == "")
+expect(say("hi")() == "hi")
+expect(say("hi")("there")() == "hi there")
+expect(say("hello")("my")("name")("is")("Colette")() == "hello my name is Colette")
+expect(say("h i")() == "h i")
+expect(say("hi ")("   there")() == "hi     there")
+expect(say("")("")("dog")("")("go")() == "  dog  go")
+expect(say("😄🤗")("💀👊🏾")() == "😄🤗 💀👊🏾")
 
 suite("powers_generator")
 g1 = powers_generator(base=2, limit=1)
