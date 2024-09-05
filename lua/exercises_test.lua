@@ -1,4 +1,4 @@
-require "exercises"
+require "lua.exercises"
 
 --------------------------------------------------------------------------------
 passed, failed = 0, 0
