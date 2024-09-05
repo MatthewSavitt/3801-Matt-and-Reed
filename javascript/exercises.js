@@ -1,4 +1,5 @@
 import { open } from "node:fs/promises"
+import { readFile } from "node:fs/promises"
 
 export function change(amount) {
   if (!Number.isInteger(amount)) {
@@ -64,5 +65,23 @@ export function say(initialString) {
 }
 
 // Write your line count function here
+export async function meaningfulLineCount(filename) {
+  try {
+      const file = await fs.readFile(filename, 'utf-8'); // Uses fs.promises.readFile to read file asynchronously to check it it exists
+      const lines = file.split('\n'); // Splits lines of file for iteration
+      let count = 0;
+
+      for (let line of lines) {
+          const trimmed = line.trim(); // Trim() function to trim whitespace of line
+          if (trimmed && !trimmed.startsWith('#')) { // Checks if line is not empty nor has # as a starting character
+              count++;
+          }
+      }
+
+      return count; // Returns number of non-empty lines
+  } catch (err) {
+      throw new Error('No such file'); // Rejected promise propagates if file not found
+  }
+}
 
 // Write your Quaternion class here

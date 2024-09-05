@@ -65,5 +65,21 @@ end
 
 
 -- Write your line count function here
+function meaningful_line_count(filename)
+  local file, err = io.open(filename, "r")
+  if not file then
+      error("No such file") -- throws error if file not found
+  end
 
--- Write your Quaternion table here
+  local count = 0
+  for line in file:lines() do
+      local trimmed = line:match("^%s*(.-)%s*$") -- trims whitespace from line using pattern match
+      if #trimmed > 0 and trimmed:sub(1, 1) ~= "#" then -- checks if trimmed line is not empty nor has # as a starting character
+          count = count + 1
+      end
+  end
+
+  file:close()
+  return count -- returns number of non-empty lines
+
+  -- Write your Quaternion table here

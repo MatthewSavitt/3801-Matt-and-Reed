@@ -48,6 +48,16 @@ def say(initial_string = None):
     return inner
 
 # Write your line count function here
-
+def meaningful_line_count(filename):
+    try:
+        count = 0
+        with open(filename, 'r') as file: # "with" statement automatically checks if file exists, and raises error if not
+            for line in file:
+                trimmed = line.strip() # strip() function trims whitespace from line
+                if trimmed and not trimmed.startswith('#'): # checks if line is not empty nor has # as a starting character
+                    count += 1
+        return count # returns number of non-empty lines
+    except FileNotFoundError:
+        raise FileNotFoundError("No such file") # raises specific "No such file" error for testing
 
 # Write your Quaternion class here
