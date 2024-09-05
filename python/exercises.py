@@ -15,7 +15,7 @@ def change(amount: int) -> dict[int, int]:
 
 # Write your first then lower case function here
 def first_then_lower_case(strings: list, min_length: int) -> str: 
-    # Check if strings is a list and minLength is an integer
+    # Check if strings is a list of strings and minLength is an integer
     if not isinstance(strings, list) or not all(isinstance(s, str) for s in strings):
         raise TypeError('strings must be a list of type str')
     if not isinstance(min_length, int):
@@ -31,7 +31,7 @@ def first_then_lower_case(strings: list, min_length: int) -> str:
     return None
         
 # Write your powers generator here
-def powers_generator(base: int, exponent: int):
+def powers_generator(*, base: int, exponent: int): #keyword-only input
     for power in range(exponent):
         yield base ** power
     yield None

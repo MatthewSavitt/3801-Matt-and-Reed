@@ -26,7 +26,7 @@ export function firstThenLowerCase(strings, minLength) {
     throw new TypeError('Invalid argument: all elements in the strings array must be strings');
   }
   // Check if the array is empty
-  if (strings.length === 0) {
+  if (strings?.length === 0) { //stupid chaining operator
     return undefined;
   }
   // Iterate through the array and find the first string with a length greater than or equal to minLength
@@ -40,7 +40,7 @@ export function firstThenLowerCase(strings, minLength) {
 }
 
 // Write your powers generator here
-export function* powersGenerator(base, exponent) {
+export function* powersGenerator({base, exponent}) { //destructured
   for (let power = 0; power < exponent; power++) {
     yield base ** power;
   }
