@@ -61,3 +61,49 @@ def meaningful_line_count(filename):
         raise FileNotFoundError("No such file") # raises specific "No such file" error for testing
 
 # Write your Quaternion class here
+@dataclass(frozen=True) # creates Quaternion as a frozen dataclass
+class Quaternion:
+    a: float
+    b: float
+    c: float
+    d: float
+
+    def __add__(self, other): # metamethod for "+" operator
+        return Quaternion(
+            self.a + other.a,
+            self.b + other.b,
+            self.c + other.c,
+            self.d + other.d
+        )
+
+    def __mul__(self, other): # metamethod for "*" operator
+        return Quaternion(
+            self.a * other.a - self.b * other.b - self.c * other.c - self.d * other.d,
+            self.a * other.b + self.b * other.a + self.c * other.d - self.d * other.c,
+            self.a * other.c - self.b * other.d + self.c * other.a + self.d * other.b,
+            self.a * other.d + self.b * other.c - self.c * other.b + self.d * other.a
+        )
+
+    def __eq__(self, other): # metamethod for "==" operator
+        return (self.a == other.a and self.b == other.b and
+                self.c == other.c and self.d == other.d)
+
+    def __str__(self): # metamethod for string "" conversion
+        parts = []
+        if self.a != 0:
+            parts.append(f"{self.a}") 
+        if self.b != 0:
+            parts.append(f"{self.b}i") # adds i, j, and k to end of coefficients for string formatting
+        if self.c != 0:
+            parts.append(f"{self.c}j")
+        if self.d != 0:
+            parts.append(f"{self.d}k")
+        return "+".join(parts).replace("+-", "-") # puts together parts with + and replaces "+-" with just "-" for better formatting
+
+    @property
+    def coefficients(self): # property method that returns coeefficients of Quaternion
+        return (self.a, self.b, self.c, self.d) 
+
+    @property
+    def conjugate(self): # property method that returns conjugation of Quaternion
+        return Quaternion(self.a, -self.b, -self.c, -self.d)

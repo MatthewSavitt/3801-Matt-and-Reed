@@ -83,3 +83,50 @@ function meaningful_line_count(filename)
   return count -- returns number of non-empty lines
 
   -- Write your Quaternion table here
+  Quaternion = {}
+  Quaternion.__index = Quaternion -- makes Quaternion a class
+  
+  function Quaternion.new(a, b, c, d) -- makes a new Quaternion Table
+      local self = setmetatable({}, Quaternion)
+      self.a, self.b, self.c, self.d = a, b, c, d
+      return self
+  end
+  
+  function Quaternion:coefficients() -- returns the coefficients of Quaternion Table
+      return {self.a, self.b, self.c, self.d}
+  end
+  
+  function Quaternion:conjugate() -- returns conjugation of Quaternion Table
+      return Quaternion.new(self.a, -self.b, -self.c, -self.d)
+  end
+  
+  function Quaternion.__add(q1, q2) -- metamethod for "+" operator
+      return Quaternion.new(
+          q1.a + q2.a,
+          q1.b + q2.b,
+          q1.c + q2.c,
+          q1.d + q2.d
+      )
+  end
+  
+  function Quaternion.__mul(q1, q2) -- metamethod for "*" operator
+      return Quaternion.new(
+          q1.a * q2.a - q1.b * q2.b - q1.c * q2.c - q1.d * q2.d,
+          q1.a * q2.b + q1.b * q2.a + q1.c * q2.d - q1.d * q2.c,
+          q1.a * q2.c - q1.b * q2.d + q1.c * q2.a + q1.d * q2.b,
+          q1.a * q2.d + q1.b * q2.c - q1.c * q2.b + q1.d * q2.a
+      )
+  end
+  
+  function Quaternion.__eq(q1, q2) -- metamethod for "==" operator
+      return q1.a == q2.a and q1.b == q2.b and q1.c == q2.c and q1.d == q2.d
+  end
+  
+  function Quaternion:__tostring() -- metamethod for toString() function
+      local parts = {}
+      if self.a ~= 0 then table.insert(parts, tostring(self.a)) end
+      if self.b ~= 0 then table.insert(parts, string.format("%si", self.b)) end --adds i, j, and k to end of coefficients for string formatting
+      if self.c ~= 0 then table.insert(parts, string.format("%sj", self.c)) end
+      if self.d ~= 0 then table.insert(parts, string.format("%sk", self.d)) end
+      return table.concat(parts, "+"):gsub("%+%-", "-") -- puts together parts with + and replaces "+-" with just "-" for better formatting
+  end

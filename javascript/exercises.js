@@ -85,3 +85,52 @@ export async function meaningfulLineCount(filename) {
 }
 
 // Write your Quaternion class here
+class Quaternion {
+  constructor(a, b, c, d) {  // Creates Quaternion
+      this.a = a;
+      this.b = b;
+      this.c = c;
+      this.d = d;
+      Object.freeze(this); // Makes the Quaternion immutable
+  }
+
+  plus(other) { // method for Quaternion addition
+      return new Quaternion(
+          this.a + other.a,
+          this.b + other.b,
+          this.c + other.c,
+          this.d + other.d
+      );
+  }
+
+  times(other) { // method for Quaternion multiplication
+      return new Quaternion(
+          this.a * other.a - this.b * other.b - this.c * other.c - this.d * other.d,
+          this.a * other.b + this.b * other.a + this.c * other.d - this.d * other.c,
+          this.a * other.c - this.b * other.d + this.c * other.a + this.d * other.b,
+          this.a * other.d + this.b * other.c - this.c * other.b + this.d * other.a
+      );
+  }
+
+  equals(other) { // method for Quaternion equality
+      return this.a === other.a && this.b === other.b &&
+             this.c === other.c && this.d === other.d;
+  }
+
+  get coefficients() { // getter method for coefficients in Quaternion
+      return [this.a, this.b, this.c, this.d];
+  }
+
+  get conjugate() { // getter method for conjugation of Quaternion
+      return new Quaternion(this.a, -this.b, -this.c, -this.d);
+  }
+
+  toString() { // method for toString() function
+      const parts = [];
+      if (this.a !== 0) parts.push(`${this.a}`);
+      if (this.b !== 0) parts.push(`${this.b}i`); // adds i, j, and k to end of coefficients for string formatting
+      if (this.c !== 0) parts.push(`${this.c}j`);
+      if (this.d !== 0) parts.push(`${this.d}k`);
+      return parts.join("+").replace(/\+\-/g, "-"); // puts together parts with + and replaces "+-" with just "-" for better formatting
+  }
+}
