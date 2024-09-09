@@ -17,35 +17,31 @@ export function change(amount) {
 }
 
 // Write your first then lower case function here
-export function firstThenLowerCase(strings, minLength) {
-  // Check if strings is an array and minLength is a number
-  if (!Array.isArray(strings) || typeof minLength !== 'number') {
-    throw new TypeError('Invalid arguments: strings must be an array and minLength must be a number');
-  }
-  // Check if all elements in the strings array are strings
-  if (!strings.every(s => typeof s === 'string')) {
-    throw new TypeError('Invalid argument: all elements in the strings array must be strings');
-  }
-  // Check if the array is empty
-  if (strings?.length === 0) { //stupid chaining operator
+export function firstThenLowerCase(array, predicate) {
+  if (array?.length === 0) {
     return undefined;
   }
-  // Iterate through the array and find the first string with a length greater than or equal to minLength
-  for (const string of strings) {
-    if (string.length >= minLength) {
-      return string.toLowerCase();
+
+  for (const element of array) {
+    if (predicate(element)) {
+      return element.toLowerCase();
     }
   }
-  // If no string meets the minimum length, return undefined
+
   return undefined;
 }
 
 // Write your powers generator here
-export function* powersGenerator({base, exponent}) { //destructured
-  for (let power = 0; power < exponent; power++) {
-    yield base ** power;
+export function* powersGenerator({ base, exponent }) {
+  if (typeof base !== 'number' || typeof exponent !== 'number' || exponent < 0) {
+    throw new TypeError('Invalid arguments: base must be a number and exponent must be a positive number');
   }
-  yield null;
+  let currentPower = 1;
+  while (currentPower <= exponent) {
+    yield currentPower;
+    currentPower *= base;
+  }
+  return undefined;
 }
 
 // Write your say function here
@@ -85,7 +81,7 @@ export async function meaningfulLineCount(filename) {
 }
 
 // Write your Quaternion class here
-class Quaternion {
+export class Quaternion {
   constructor(a, b, c, d) {  // Creates Quaternion
       this.a = a;
       this.b = b;
