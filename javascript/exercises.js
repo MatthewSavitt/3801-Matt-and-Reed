@@ -17,17 +17,18 @@ export function change(amount) {
 }
 
 // Write your first then lower case function here
-export function firstThenLowerCase(array, predicate) {
+export function firstThenLowerCase(array, min_length) {
+  // Check if the array is empty
   if (array?.length === 0) {
     return undefined;
   }
-
+  // Iterate through the array and find the first string with a length greater than or equal to min_length
   for (const element of array) {
-    if (predicate(element)) {
+    if (min_length(element)) { // type coercion to check for length
       return element.toLowerCase();
     }
   }
-
+  // If no string meets the minimum length, return nil
   return undefined;
 }
 
@@ -121,12 +122,19 @@ export class Quaternion {
       return new Quaternion(this.a, -this.b, -this.c, -this.d);
   }
 
-  toString() { // method for toString() function
-      const parts = [];
-      if (this.a !== 0) parts.push(`${this.a}`);
-      if (this.b !== 0) parts.push(`${this.b}i`); // adds i, j, and k to end of coefficients for string formatting
-      if (this.c !== 0) parts.push(`${this.c}j`);
-      if (this.d !== 0) parts.push(`${this.d}k`);
-      return parts.join("+").replace(/\+\-/g, "-"); // puts together parts with + and replaces "+-" with just "-" for better formatting
+  toString() {
+    const parts = [];
+    if (this.a !== 0) parts.push(this.a === 1 ? "" : `${this.a}`);
+    if (this.b !== 0) parts.push(this.b === 1 ? "i" : `${this.b}i`);
+    if (this.c !== 0) parts.push(this.c === 1 ? "j" : `${this.c}j`);
+    if (this.d !== 0) parts.push(this.d === 1 ? "k" : `${this.d}k`);
+  
+    // Check if all coefficients are zero
+    if (parts.length === 0) {
+      return "0";
+    } else {
+      // Handle negative coefficients with a "-" sign
+      return parts.join("+").replace(/\+\-/g, "-").replace(/^-1/, "-");
+    }
   }
 }

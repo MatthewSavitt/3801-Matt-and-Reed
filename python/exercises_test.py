@@ -1,6 +1,6 @@
 import unittest
 import pytest
-from python.exercises import (
+from exercises import (
     first_then_lower_case,
     say,
     powers_generator,

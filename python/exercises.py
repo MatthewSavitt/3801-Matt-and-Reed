@@ -15,26 +15,25 @@ def change(amount: int) -> dict[int, int]:
 
 # Write your first then lower case function here
 def first_then_lower_case(strings: list, min_length: int) -> str: 
-    # Check if strings is a list of strings and minLength is an integer
-    if not isinstance(strings, list) or not all(isinstance(s, str) for s in strings):
-        raise TypeError('strings must be a list of type str')
-    if not isinstance(min_length, int):
-        raise TypeError('min_length must be an integer')
     # Check if the array is empty
-    if(len(strings) == 0):
+    if not strings:
         return None
     # Iterate through the array and find the first string with a length greater than or equal to min_length
     for string in strings:
-        if len(string) >= min_length:
+        if min_length(string): #ugh... I have to do it like this because TECHNICALLY min_length is also a predicate function (for values like nonempty and greater_than_three). So ugly.
             return string.lower()
     # If no string meets the minimum length, return None
     return None
         
 # Write your powers generator here
-def powers_generator(*, base: int, exponent: int): #keyword-only input
-    for power in range(exponent):
-        yield base ** power
-    yield None
+def powers_generator(*, base: int, limit: int): # keyword-only input
+    power = 0
+    while True:
+        current_value = base ** power
+        if current_value > limit: 
+            break
+        yield current_value
+        power += 1
 
 # Write your say function here
 def say(initial_string = None):
