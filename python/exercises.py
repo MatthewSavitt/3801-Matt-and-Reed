@@ -50,7 +50,7 @@ def say(initial_string = None):
 def meaningful_line_count(filename):
     try:
         count = 0
-        with open(filename, 'r') as file: # "with" statement automatically checks if file exists, and raises error if not
+        with open(filename, 'r', encoding='utf-8') as file: # "with" statement automatically checks if file exists, and raises error if not, utf-8 for character-reading fix
             for line in file:
                 trimmed = line.strip() # strip() function trims whitespace from line
                 if trimmed and not trimmed.startswith('#'): # checks if line is not empty nor has # as a starting character
