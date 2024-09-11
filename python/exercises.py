@@ -60,14 +60,14 @@ def meaningful_line_count(filename):
         raise FileNotFoundError("No such file") # raises specific "No such file" error for testing
 
 # Write your Quaternion class here
-@dataclass(frozen=True) # creates Quaternion as a frozen dataclass
+@dataclass(frozen=True)
 class Quaternion:
     a: float
     b: float
     c: float
     d: float
 
-    def __add__(self, other): # metamethod for "+" operator
+    def __add__(self, other):
         return Quaternion(
             self.a + other.a,
             self.b + other.b,
@@ -75,7 +75,7 @@ class Quaternion:
             self.d + other.d
         )
 
-    def __mul__(self, other): # metamethod for "*" operator
+    def __mul__(self, other):
         return Quaternion(
             self.a * other.a - self.b * other.b - self.c * other.c - self.d * other.d,
             self.a * other.b + self.b * other.a + self.c * other.d - self.d * other.c,
@@ -83,26 +83,65 @@ class Quaternion:
             self.a * other.d + self.b * other.c - self.c * other.b + self.d * other.a
         )
 
-    def __eq__(self, other): # metamethod for "==" operator
+    def __eq__(self, other):
         return (self.a == other.a and self.b == other.b and
                 self.c == other.c and self.d == other.d)
 
-    def __str__(self): # metamethod for string "" conversion
+    def __str__(self):
         parts = []
+
+        # Add real part (a) if non-zero
         if self.a != 0:
-            parts.append(f"{self.a}") 
+            parts.append(f"{self.a}")
+
+        # Add imaginary parts (i, j, k) if non-zero, ensuring order and proper signs
         if self.b != 0:
-            parts.append(f"{self.b}i") # adds i, j, and k to end of coefficients for string formatting
+            if self.b == 1.0:
+                parts.append("i")
+            elif self.b == -1.0:
+                parts.append("-i")
+            else:
+                parts.append(f"{self.b}i")
+
         if self.c != 0:
-            parts.append(f"{self.c}j")
+            if self.c == 1.0:
+                parts.append("j")
+            elif self.c == -1.0:
+                parts.append("-j")
+            else:
+                parts.append(f"{self.c}j")
+
         if self.d != 0:
-            parts.append(f"{self.d}k")
-        return "+".join(parts).replace("+-", "-") # puts together parts with + and replaces "+-" with just "-" for better formatting
+            if self.d == 1.0:
+                parts.append("k")
+            elif self.d == -1.0:
+                parts.append("-k")
+            else:
+                parts.append(f"{self.d}k")
+
+        if not parts:
+            return "0"
+
+        # Ensure proper ordering and joining, fix sign issues
+        result = "+".join(parts)
+        result = result.replace("+-", "-").replace("+0", "")
+
+        # Special cases for pure imaginary quaternions
+        if result == "1i": return "i"
+        if result == "-1i": return "-i"
+        if result == "1j": return "j"
+        if result == "-1j": return "-j"
+        if result == "1k": return "k"
+        if result == "-1k": return "-k"
+
+        return result
 
     @property
-    def coefficients(self): # property method that returns coeefficients of Quaternion
-        return (self.a, self.b, self.c, self.d) 
+    def coefficients(self):
+        return (self.a, self.b, self.c, self.d)
 
     @property
-    def conjugate(self): # property method that returns conjugation of Quaternion
+    def conjugate(self):
         return Quaternion(self.a, -self.b, -self.c, -self.d)
+
+
