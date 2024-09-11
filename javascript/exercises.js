@@ -17,13 +17,13 @@ export function change(amount) {
 }
 
 // Write your first then lower case function here
-export function firstThenLowerCase(array, min_length) {
+export function firstThenLowerCase(strings, min_length) {
   // Check if the array is empty
-  if (array?.length === 0) {
+  if (strings?.length === 0) {
     return undefined;
   }
   // Iterate through the array and find the first string with a length greater than or equal to min_length
-  for (const element of array) {
+  for (const element of strings) {
     if (min_length(element)) { // type coercion to check for length
       return element.toLowerCase();
     }
