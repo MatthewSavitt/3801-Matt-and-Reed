@@ -63,35 +63,46 @@ export function say(initialString) {
 
 // Write your line count function here
 export async function meaningfulLineCount(filename) {
-  try {
-      const file = await fs.readFile(filename, 'utf-8'); // Uses fs.promises.readFile to read file asynchronously to check it it exists
-      const lines = file.split('\n'); // Splits lines of file for iteration
-      let count = 0;
+    try {
+        const file = await fs.readFile(filename, 'utf-8'); // Read the file asynchronously
+        const lines = file.split('\n'); // Split the file content by newlines
+        let count = 0;
 
-      for (let line of lines) {
-          const trimmed = line.trim(); // Trim() function to trim whitespace of line
-          if (trimmed && !trimmed.startsWith('#')) { // Checks if line is not empty nor has # as a starting character
-              count++;
-          }
-      }
+        for (let line of lines) {
+            const trimmed = line.trim(); // Trim whitespace from each line
+            if (trimmed && !trimmed.startsWith('#')) { // Count non-empty lines that don't start with '#'
+                count++;
+            }
+        }
 
-      return count; // Returns number of non-empty lines
-  } catch (err) {
-      throw new Error('No such file'); // Rejected promise propagates if file not found
-  }
+        return count; // Return the meaningful line count
+    } catch (err) {
+        return Promise.reject(new Error('No such file')); // Propagate the rejection properly
+    }
 }
 
 // Write your Quaternion class here
 export class Quaternion {
-  constructor(a, b, c, d) {  // Creates Quaternion
+  constructor(a, b, c, d) {
       this.a = a;
       this.b = b;
       this.c = c;
       this.d = d;
-      Object.freeze(this); // Makes the Quaternion immutable
+      Object.freeze(this); // Freeze the object to make it immutable
   }
 
-  plus(other) { // method for Quaternion addition
+  // Getter for conjugate
+  get conjugate() {
+      return new Quaternion(this.a, -this.b, -this.c, -this.d);
+  }
+
+  // Getter for coefficients
+  get coefficients() {
+      return [this.a, this.b, this.c, this.d];
+  }
+
+  // Addition operation
+  plus(other) {
       return new Quaternion(
           this.a + other.a,
           this.b + other.b,
@@ -100,7 +111,8 @@ export class Quaternion {
       );
   }
 
-  times(other) { // method for Quaternion multiplication
+  // Multiplication operation
+  times(other) {
       return new Quaternion(
           this.a * other.a - this.b * other.b - this.c * other.c - this.d * other.d,
           this.a * other.b + this.b * other.a + this.c * other.d - this.d * other.c,
@@ -109,32 +121,47 @@ export class Quaternion {
       );
   }
 
-  equals(other) { // method for Quaternion equality
-      return this.a === other.a && this.b === other.b &&
-             this.c === other.c && this.d === other.d;
+  // Equality check
+  equals(other) {
+      return (
+          this.a === other.a &&
+          this.b === other.b &&
+          this.c === other.c &&
+          this.d === other.d
+      );
   }
 
-  get coefficients() { // getter method for coefficients in Quaternion
-      return [this.a, this.b, this.c, this.d];
-  }
-
-  get conjugate() { // getter method for conjugation of Quaternion
-      return new Quaternion(this.a, -this.b, -this.c, -this.d);
-  }
-
+  // String representation
   toString() {
-    const parts = [];
-    if (this.a !== 0) parts.push(this.a === 1 ? "" : `${this.a}`);
-    if (this.b !== 0) parts.push(this.b === 1 ? "i" : `${this.b}i`);
-    if (this.c !== 0) parts.push(this.c === 1 ? "j" : `${this.c}j`);
-    if (this.d !== 0) parts.push(this.d === 1 ? "k" : `${this.d}k`);
-  
-    // Check if all coefficients are zero
-    if (parts.length === 0) {
-      return "0";
-    } else {
-      // Handle negative coefficients with a "-" sign
-      return parts.join("+").replace(/\+\-/g, "-").replace(/^-1/, "-");
-    }
+      const parts = [];
+
+      if (this.a !== 0) parts.push(`${this.a}`);
+
+      if (this.b !== 0) {
+          if (this.b === 1) parts.push("i");
+          else if (this.b === -1) parts.push("-i");
+          else parts.push(`${this.b}i`);
+      }
+
+      if (this.c !== 0) {
+          if (this.c === 1) parts.push("j");
+          else if (this.c === -1) parts.push("-j");
+          else parts.push(`${this.c}j`);
+      }
+
+      if (this.d !== 0) {
+          if (this.d === 1) parts.push("k");
+          else if (this.d === -1) parts.push("-k");
+          else parts.push(`${this.d}k`);
+      }
+
+      if (parts.length === 0) return "0";
+
+      // Ensure proper ordering and joining, fix sign issues
+      let result = parts.join("+");
+
+      // Replace all instances of "+-" with "-"
+      result = result.replace(/\+\-/g, "-");
+      return result;
   }
 }
