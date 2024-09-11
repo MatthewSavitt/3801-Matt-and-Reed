@@ -126,14 +126,6 @@ class Quaternion:
         result = "+".join(parts)
         result = result.replace("+-", "-").replace("+0", "")
 
-        # Special cases for pure imaginary quaternions
-        if result == "1i": return "i"
-        if result == "-1i": return "-i"
-        if result == "1j": return "j"
-        if result == "-1j": return "-j"
-        if result == "1k": return "k"
-        if result == "-1k": return "-k"
-
         return result
 
     @property
