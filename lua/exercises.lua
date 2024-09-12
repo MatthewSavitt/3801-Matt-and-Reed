@@ -15,13 +15,8 @@ end
 
 -- Write your first then lower case function here
 function first_then_lower_case(strings, min_length)
-  -- Check if strings is an array and min_length is a number
-  if type(strings) ~= "table" then
-    error("strings must be a list of type str")
-  elseif math.type(min_length) ~= "integer" then
-    error("min_length must be an integer")
   -- Check if the array is empty
-  elseif #strings == 0 then
+  if #strings == 0 then
     return nil
   end
   for _, s in ipairs(strings) do
@@ -31,7 +26,7 @@ function first_then_lower_case(strings, min_length)
   end
   -- Iterate through the array and find the first string with a length greater than or equal to min_length
   for _, string in ipairs(strings) do
-    if #string >= min_length then
+    if min_length(string) then
       return string.lower(string)
     end
   end
@@ -40,14 +35,20 @@ function first_then_lower_case(strings, min_length)
 end
 
 -- Write your powers generator here
-function powers_generator(base, exponent)
-  return coroutine.wrap(function()
-    for power = 0, exponent - 1 do
-      coroutine.yield(base ^ power)
+function powers_generator(base, limit)
+  local power = 0
+  return coroutine.create(function()
+    while true do
+      local value = base ^ power
+      if value > limit then
+        return -- end the coroutine once the limit is exceeded
+      end
+      coroutine.yield(value)
+      power = power + 1
     end
-    coroutine.yield(nil)
   end)
 end
+
 -- Write your say function here
 function say(initial_string)
   if initial_string == nil then
@@ -81,26 +82,27 @@ function meaningful_line_count(filename)
 
   file:close()
   return count -- returns number of non-empty lines
+end
 
   -- Write your Quaternion table here
   Quaternion = {}
-  Quaternion.__index = Quaternion -- makes Quaternion a class
+  Quaternion.__index = Quaternion
   
-  function Quaternion.new(a, b, c, d) -- makes a new Quaternion Table
+  function Quaternion.new(a, b, c, d)
       local self = setmetatable({}, Quaternion)
-      self.a, self.b, self.c, self.d = a, b, c, d
+      self.a, self.b, self.c, self.d = a or 0, b or 0, c or 0, d or 0
       return self
   end
   
-  function Quaternion:coefficients() -- returns the coefficients of Quaternion Table
+  function Quaternion:coefficients()
       return {self.a, self.b, self.c, self.d}
   end
   
-  function Quaternion:conjugate() -- returns conjugation of Quaternion Table
+  function Quaternion:conjugate()
       return Quaternion.new(self.a, -self.b, -self.c, -self.d)
   end
   
-  function Quaternion.__add(q1, q2) -- metamethod for "+" operator
+  function Quaternion.__add(q1, q2) -- + metamethod
       return Quaternion.new(
           q1.a + q2.a,
           q1.b + q2.b,
@@ -109,7 +111,7 @@ function meaningful_line_count(filename)
       )
   end
   
-  function Quaternion.__mul(q1, q2) -- metamethod for "*" operator
+  function Quaternion.__mul(q1, q2) -- * metamethod
       return Quaternion.new(
           q1.a * q2.a - q1.b * q2.b - q1.c * q2.c - q1.d * q2.d,
           q1.a * q2.b + q1.b * q2.a + q1.c * q2.d - q1.d * q2.c,
@@ -118,15 +120,48 @@ function meaningful_line_count(filename)
       )
   end
   
-  function Quaternion.__eq(q1, q2) -- metamethod for "==" operator
+  function Quaternion.__eq(q1, q2) -- == metamethod
       return q1.a == q2.a and q1.b == q2.b and q1.c == q2.c and q1.d == q2.d
   end
   
-  function Quaternion:__tostring() -- metamethod for toString() function
+  function Quaternion:__tostring()
       local parts = {}
-      if self.a ~= 0 then table.insert(parts, tostring(self.a)) end
-      if self.b ~= 0 then table.insert(parts, string.format("%si", self.b)) end --adds i, j, and k to end of coefficients for string formatting
-      if self.c ~= 0 then table.insert(parts, string.format("%sj", self.c)) end
-      if self.d ~= 0 then table.insert(parts, string.format("%sk", self.d)) end
-      return table.concat(parts, "+"):gsub("%+%-", "-") -- puts together parts with + and replaces "+-" with just "-" for better formatting
+  
+      if self.a ~= 0 then table.insert(parts, tostring(self.a)) end --checks when printing to display proper signs
+      if self.b ~= 0 then
+          if self.b == 1 then
+              table.insert(parts, "i")
+          elseif self.b == -1 then
+              table.insert(parts, "-i")
+          else
+              table.insert(parts, tostring(self.b) .. "i")
+          end
+      end
+      if self.c ~= 0 then
+          if self.c == 1 then
+              table.insert(parts, "j")
+          elseif self.c == -1 then
+              table.insert(parts, "-j")
+          else
+              table.insert(parts, tostring(self.c) .. "j")
+          end
+      end
+      if self.d ~= 0 then
+          if self.d == 1 then
+              table.insert(parts, "k")
+          elseif self.d == -1 then
+              table.insert(parts, "-k")
+          else
+              table.insert(parts, tostring(self.d) .. "k")
+          end
+      end
+  
+      if #parts == 0 then
+          return "0"
+      else
+          local result = table.concat(parts, "+")
+          result = result:gsub("%+%-", "-") -- fix signs like "+-" to "-"
+          return result
+      end
   end
+  
