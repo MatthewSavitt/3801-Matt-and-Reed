@@ -64,20 +64,21 @@ export function say(initialString) {
 // Write your line count function here
 export async function meaningfulLineCount(filename) {
     try {
-        const file = await fs.readFile(filename, 'utf-8'); // Read the file asynchronously
-        const lines = file.split('\n'); // Split the file content by newlines
+        const file = await open(filename, 'r'); // Open the file
+        const content = await file.readFile('utf-8'); // Read the file contents
+        await file.close(); // Ensure the file is closed after reading
+        const lines = content.split('\n'); // Split the content by newlines
         let count = 0;
-
+        
         for (let line of lines) {
-            const trimmed = line.trim(); // Trim whitespace from each line
-            if (trimmed && !trimmed.startsWith('#')) { // Count non-empty lines that don't start with '#'
+            const trimmed = line.trim(); // Trim whitespace from the line
+            if (trimmed && !trimmed.startsWith('#')) { // Check for meaningful lines
                 count++;
             }
         }
-
-        return count; // Return the meaningful line count
+        return count; // Return the count of meaningful lines
     } catch (err) {
-        return Promise.reject(new Error('No such file')); // Propagate the rejection properly
+        return Promise.reject(new Error('No such file')); // Reject with an error if file not found
     }
 }
 
