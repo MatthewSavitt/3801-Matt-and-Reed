@@ -15,7 +15,7 @@ fun change(amount: Long): Map<Int, Long> {
 }
 
 // Write your first then lower case function here
-fun lowercasedFirst(list: List<String>, predicate: (String) -> Boolean): String? {
+fun firstThenLowerCase(list: List<String>, predicate: (String) -> Boolean): String? {
     return list.firstOrNull(predicate)?.lowercase()
 }
 
@@ -30,16 +30,20 @@ class Say(private val words: MutableList<String> = mutableListOf()) {
         get() = words.joinToString(" ")
 }
 
-fun say(word: String): Say {
-    return Say().and(word)
+fun say(word: String = ""): Say {
+    return if (word.isEmpty()) {
+        Say() 
+    } else {
+        Say().and(word)
+    }
 }
 
 // Write your meaningfulLineCount function here
-fun countLines(filename: String): Int {
+fun meaningfulLineCount(filename: String): Long {
     return BufferedReader(FileReader(filename)).use { reader ->
         reader.lineSequence()
             .filter { it.isNotBlank() && !it.trimStart().startsWith("#") }
-            .count()
+            .count().toLong()
     }
 }
 // Write your Quaternion data class here
