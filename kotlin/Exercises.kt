@@ -88,7 +88,7 @@ sealed interface BinarySearchTree {
     fun contains(value: String): Boolean
     fun insert(value: String): BinarySearchTree
     fun size(): Int
-
+// an empty bst
     object Empty : BinarySearchTree {
         override fun contains(value: String): Boolean = false
         override fun insert(value: String): BinarySearchTree = Node(value, Empty, Empty)
@@ -99,6 +99,8 @@ sealed interface BinarySearchTree {
     data class Node(val value: String, val left: BinarySearchTree, val right: BinarySearchTree) : BinarySearchTree {
         override fun contains(value: String): Boolean {
             return when {
+                //checks for if the current node, the left, or the right node contains the requested value.
+                //left is lesser, right is greater. Keep recursively calling until value is found or empty case is reached.
                 this.value == value -> true
                 value < this.value -> left.contains(value)
                 else -> right.contains(value)
@@ -107,12 +109,16 @@ sealed interface BinarySearchTree {
 
         override fun insert(value: String): BinarySearchTree {
             return when {
+                //check is inserted value is lesser or greater than current node's value
+                //if lesser, value is inserted as left leaf node
+                //if greater, value is inserted as right leaf node.
+                //recurse until value is sorted
                 value < this.value -> copy(left = left.insert(value))
                 value > this.value -> copy(right = right.insert(value))
                 else -> this
             }
         }
-
+        //size will keep recursively being checked and accumulated until final size is obtained.
         override fun size(): Int = 1 + left.size() + right.size()
 
         override fun toString(): String = "($left$value$right)"

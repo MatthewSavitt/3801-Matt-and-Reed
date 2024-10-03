@@ -113,10 +113,12 @@ indirect enum BinarySearchTree {
     case node(String, BinarySearchTree, BinarySearchTree)
 
     func contains(_ value: String) -> Bool {
-        switch self {
+        switch self { //trivial case for empty bst
         case .empty:
             return false
         case let .node(v, left, right):
+            //checks for if the current node, the left, or the right node contains the requested value.
+            //left is lesser, right is greater. Keep recursively calling until value is found or empty case is reached.
             if v == value {
                 return true
             } else if value < v {
@@ -131,6 +133,10 @@ indirect enum BinarySearchTree {
         switch self {
         case .empty:
             return .node(value, .empty, .empty)
+        //check is inserted value is lesser or greater than current node's value
+        //if lesser, value is inserted as left leaf node
+        //if greater, value is inserted as right leaf node.
+        //recurse until value is sorted
         case let .node(v, left, right):
             if value < v {
                 return .node(v, left.insert(value), right)
@@ -143,6 +149,7 @@ indirect enum BinarySearchTree {
     }
 
     func size() -> Int {
+        //size will keep recursively being checked and accumulated until final size is obtained.
         switch self {
         case .empty:
             return 0

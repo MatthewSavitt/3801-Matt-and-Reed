@@ -147,6 +147,8 @@ public class Exercises {
     
             @Override
             public boolean contains(String value) {
+            //checks for if the current node, the left, or the right node contains the requested value.
+            //left is lesser, right is greater. Keep recursively calling until value is found or empty case is reached.
                 if (this.value.equals(value)) {
                     return true;
                 }
@@ -159,6 +161,10 @@ public class Exercises {
     
             @Override
             public BinarySearchTree insert(String value) {
+            //check is inserted value is lesser or greater than current node's value
+            //if lesser, value is inserted as left leaf node
+            //if greater, value is inserted as right leaf node.
+            //recurse until value is sorted
                 if (value.compareTo(this.value) < 0) {
                     return new Node(this.value, left.insert(value), right);
                 } else if (value.compareTo(this.value) > 0) {
@@ -170,6 +176,7 @@ public class Exercises {
     
             @Override
             public int size() {
+                //size will keep recursively being checked and accumulated until final size is obtained.
                 return 1 + left.size() + right.size();
             }
     
