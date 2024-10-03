@@ -69,10 +69,115 @@ public class Exercises {
         }
     }
     
-// Write your Quaternion record class here
+    // Write your Quaternion record class here
+    public record Quaternion(double w, double x, double y, double z) {
 
+        public static final Quaternion ZERO = new Quaternion(0, 0, 0, 0);
+        public static final Quaternion I = new Quaternion(0, 1, 0, 0);
+        public static final Quaternion J = new Quaternion(0, 0, 1, 0);
+        public static final Quaternion K = new Quaternion(0, 0, 0, 1);
+    
+        public Quaternion add(Quaternion q) {
+            return new Quaternion(this.w + q.w, this.x + q.x, this.y + q.y, this.z + q.z);
+        }
+    
+        public Quaternion multiply(Quaternion q) {
+            return new Quaternion(
+                this.w * q.w - this.x * q.x - this.y * q.y - this.z * q.z,
+                this.w * q.x + this.x * q.w + this.y * q.z - this.z * q.y,
+                this.w * q.y - this.x * q.z + this.y * q.w + this.z * q.x,
+                this.w * q.z + this.x * q.y - this.y * q.x + this.z * q.w
+            );
+        }
+    
+        public Quaternion conjugate() {
+            return new Quaternion(this.w, -this.x, -this.y, -this.z);
+        }
+    
+        public double[] coefficients() {
+            return new double[]{w, x, y, z};
+        }
+    
+        @Override
+        public String toString() {
+            return String.format("(%f, %f, %f, %f)", w, x, y, z);
+        }
+    }
 
-// Write your BinarySearchTree sealed interface and its implementations here
+    // Write your BinarySearchTree sealed interface and its implementations here
+    public sealed interface BinarySearchTree permits Node, Empty {
 
+        boolean contains(String value);
+        BinarySearchTree insert(String value);
+        int size();
+        String toString();
+    
+        final class Empty implements BinarySearchTree {
+    
+            @Override
+            public boolean contains(String value) {
+                return false;
+            }
+    
+            @Override
+            public BinarySearchTree insert(String value) {
+                return new Node(value, this, this);
+            }
+    
+            @Override
+            public int size() {
+                return 0;
+            }
+    
+            @Override
+            public String toString() {
+                return "";
+            }
+        }
+    
+        final class Node implements BinarySearchTree {
+            private final String value;
+            private final BinarySearchTree left, right;
+    
+            public Node(String value, BinarySearchTree left, BinarySearchTree right) {
+                this.value = value;
+                this.left = left;
+                this.right = right;
+            }
+    
+            @Override
+            public boolean contains(String value) {
+                if (this.value.equals(value)) {
+                    return true;
+                }
+                if (value.compareTo(this.value) < 0) {
+                    return left.contains(value);
+                } else {
+                    return right.contains(value);
+                }
+            }
+    
+            @Override
+            public BinarySearchTree insert(String value) {
+                if (value.compareTo(this.value) < 0) {
+                    return new Node(this.value, left.insert(value), right);
+                } else if (value.compareTo(this.value) > 0) {
+                    return new Node(this.value, left, right.insert(value));
+                } else {
+                    return this;
+                }
+            }
+    
+            @Override
+            public int size() {
+                return 1 + left.size() + right.size();
+            }
+    
+            @Override
+            public String toString() {
+                return "(" + left.toString() + value + right.toString() + ")";
+            }
+        }
+    }
 }
     
