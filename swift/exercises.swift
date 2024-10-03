@@ -16,7 +16,7 @@ func change(_ amount: Int) -> Result<[Int:Int], NegativeAmountError> {
 }
 
 // Write your first then lower case function here
-func lowercasedFirst(for array: [String], satisfying predicate: (String) -> Bool) -> String? {
+func firstThenLowerCase(of array: [String], satisfying predicate: (String) -> Bool) -> String? {
     return array.first(where: predicate)?.lowercased()
 }
 
@@ -38,21 +38,37 @@ class Say {
     }
 }
 
-func say(_ word: String) -> Say {
+func say(_ word: String = "") -> Say {
     return Say(word)
 }
 
-// Write your meaningfulLineCount function here
-func countLines(for filename: String) async -> Result<Int, Error> {
-    do {
-        let content = try await String(contentsOfFile: filename)
-        let lines = content.split(whereSeparator: \.isNewline)
-            .filter { !$0.trimmingCharacters(in: .whitespaces).isEmpty && !$0.trimmingCharacters(in: .whitespaces).hasPrefix("#") }
-        return .success(lines.count)
-    } catch {
-        return .failure(error)
+// Define your custom error
+struct NoSuchFileError: Error {}
+
+// Updated function signature without argument labels to match test calls
+func meaningfulLineCount(in path: String) async throws -> Int {
+    let fileURL = URL(fileURLWithPath: path)
+    let fileHandle = try FileHandle(forReadingFrom: fileURL)
+    // Read the contents of the file asynchronously
+    guard let data = try await fileHandle.readToEnd() else {
+        throw NSError(domain: "Cannot read file", code: 0, userInfo: nil)
     }
+    try fileHandle.close()
+    // Convert data to a string using UTF-8 encoding
+    guard let content = String(data: data, encoding: .utf8) else {
+        throw NSError(domain: "Cannot decode file", code: 0, userInfo: nil)
+    }
+    // Split the content into lines, including empty lines
+    let lines = content.split(separator: "\n", omittingEmptySubsequences: false)
+    // Filter out lines that are purely whitespace or start with '#'
+    let filteredLines = lines.filter { line in
+        let trimmedLine = line.trimmingCharacters(in: .whitespacesAndNewlines)
+        return !trimmedLine.isEmpty && !trimmedLine.hasPrefix("#")
+    }
+    // Return the count of the filtered lines
+    return filteredLines.count
 }
+
 // Write your Quaternion struct here
 
 // Write your Binary Search Tree enum here
