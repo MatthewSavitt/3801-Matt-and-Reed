@@ -21,26 +21,25 @@ public class Exercises {
         return counts;
     }
 
-    // Write your first then lower case function here
     public static Optional<String> firstThenLowerCase(List<String> strings, Predicate<String> condition) {
         if (strings.isEmpty()) {
-            return Optional.empty();  // Return empty Optional if list is empty
+            return Optional.empty(); 
         }
         return strings.stream()
-                      .filter(condition)  // Filter strings based on the provided condition
-                      .findFirst()  // Find the first string that meets the condition
-                      .map(String::toLowerCase);  // Convert that string to lower case
+                      .filter(condition) 
+                      .findFirst()
+                      .map(String::toLowerCase);
     }
 
-    // Write your say function here
     public static SayPhrase say(String... words) {
-        // Join the initial words with a space and return a new SayPhrase object (dont trim for preserving whitespace)
         return new SayPhrase(String.join(" ", words));
     }
+
+
     // SayPhrase class for chainable phrase building
     public static class SayPhrase {
         private final String phrase;
-        // Constructor to initialize the phrase
+
         private SayPhrase(String phrase) {
             this.phrase = phrase;
         }
@@ -53,23 +52,21 @@ public class Exercises {
             return this.phrase;
         }
     }
-    
-    // Write your line count function here
+
     public static long meaningfulLineCount(String fileName) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             return reader.lines()
                 .filter(line -> !line.trim().isEmpty())  // Filter out empty or whitespace-only lines
                 .filter(line -> line.trim().charAt(0) != '#')  // Filter out comment lines starting with #
-                .count();  // Count the remaining lines
+                .count(); 
         } catch (FileNotFoundException e) {
-            // Custom message to match the test case
             throw new FileNotFoundException("No such file");
         } catch (IOException e) {
             throw new IOException("Error reading the file: " + fileName, e);
         }
     }
+
     
-    // Write your Quaternion record class here
     public record Quaternion(double w, double x, double y, double z) {
 
         public static final Quaternion ZERO = new Quaternion(0, 0, 0, 0);
@@ -104,7 +101,6 @@ public class Exercises {
         }
     }
 
-    // Write your BinarySearchTree sealed interface and its implementations here
     public sealed interface BinarySearchTree permits Node, Empty {
 
         boolean contains(String value);
@@ -147,8 +143,7 @@ public class Exercises {
     
             @Override
             public boolean contains(String value) {
-            //checks for if the current node, the left, or the right node contains the requested value.
-            //left is lesser, right is greater. Keep recursively calling until value is found or empty case is reached.
+            //Keep recursively calling until value is sorted
                 if (this.value.equals(value)) {
                     return true;
                 }
@@ -161,9 +156,6 @@ public class Exercises {
     
             @Override
             public BinarySearchTree insert(String value) {
-            //check is inserted value is lesser or greater than current node's value
-            //if lesser, value is inserted as left leaf node
-            //if greater, value is inserted as right leaf node.
             //recurse until value is sorted
                 if (value.compareTo(this.value) < 0) {
                     return new Node(this.value, left.insert(value), right);

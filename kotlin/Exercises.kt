@@ -14,12 +14,11 @@ fun change(amount: Long): Map<Int, Long> {
     return counts
 }
 
-// Write your first then lower case function here
 fun firstThenLowerCase(list: List<String>, predicate: (String) -> Boolean): String? {
     return list.firstOrNull(predicate)?.lowercase()
 }
 
-// Write your say function here
+
 class Say(private val words: MutableList<String> = mutableListOf()) {
     fun and(word: String): Say {
         words.add(word)
@@ -30,6 +29,7 @@ class Say(private val words: MutableList<String> = mutableListOf()) {
         get() = words.joinToString(" ")
 }
 
+
 fun say(word: String = ""): Say {
     return if (word.isEmpty()) {
         Say() 
@@ -38,7 +38,6 @@ fun say(word: String = ""): Say {
     }
 }
 
-// Write your meaningfulLineCount function here
 fun meaningfulLineCount(filename: String): Long {
     return BufferedReader(FileReader(filename)).use { reader ->
         reader.lineSequence()
@@ -47,7 +46,7 @@ fun meaningfulLineCount(filename: String): Long {
     }
 }
 
-// Write your Quaternion data class here
+
 data class Quaternion(val w: Double, val x: Double, val y: Double, val z: Double) {
 
     companion object {
@@ -83,12 +82,12 @@ data class Quaternion(val w: Double, val x: Double, val y: Double, val z: Double
     }
 }
 
-// Write your Binary Search Tree interface and implementing classes here
+
 sealed interface BinarySearchTree {
     fun contains(value: String): Boolean
     fun insert(value: String): BinarySearchTree
     fun size(): Int
-// an empty bst
+
     object Empty : BinarySearchTree {
         override fun contains(value: String): Boolean = false
         override fun insert(value: String): BinarySearchTree = Node(value, Empty, Empty)
@@ -99,8 +98,7 @@ sealed interface BinarySearchTree {
     data class Node(val value: String, val left: BinarySearchTree, val right: BinarySearchTree) : BinarySearchTree {
         override fun contains(value: String): Boolean {
             return when {
-                //checks for if the current node, the left, or the right node contains the requested value.
-                //left is lesser, right is greater. Keep recursively calling until value is found or empty case is reached.
+                //Keep recursively calling until value is found or empty case is reached.
                 this.value == value -> true
                 value < this.value -> left.contains(value)
                 else -> right.contains(value)
@@ -109,9 +107,6 @@ sealed interface BinarySearchTree {
 
         override fun insert(value: String): BinarySearchTree {
             return when {
-                //check is inserted value is lesser or greater than current node's value
-                //if lesser, value is inserted as left leaf node
-                //if greater, value is inserted as right leaf node.
                 //recurse until value is sorted
                 value < this.value -> copy(left = left.insert(value))
                 value > this.value -> copy(right = right.insert(value))

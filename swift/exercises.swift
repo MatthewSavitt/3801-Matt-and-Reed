@@ -15,12 +15,11 @@ func change(_ amount: Int) -> Result<[Int:Int], NegativeAmountError> {
     return .success(counts)
 }
 
-// Write your first then lower case function here
 func firstThenLowerCase(of array: [String], satisfying predicate: (String) -> Bool) -> String? {
     return array.first(where: predicate)?.lowercased()
 }
 
-// Write your say function here
+
 class Say {
     private var words: [String]
 
@@ -42,10 +41,8 @@ func say(_ word: String = "") -> Say {
     return Say(word)
 }
 
-// Define your custom error
 struct NoSuchFileError: Error {}
 
-// Updated function signature without argument labels to match test calls
 func meaningfulLineCount(in path: String) async throws -> Int {
     let fileURL = URL(fileURLWithPath: path)
     let fileHandle = try FileHandle(forReadingFrom: fileURL)
@@ -54,22 +51,21 @@ func meaningfulLineCount(in path: String) async throws -> Int {
         throw NSError(domain: "Cannot read file", code: 0, userInfo: nil)
     }
     try fileHandle.close()
-    // Convert data to a string using UTF-8 encoding
+    
     guard let content = String(data: data, encoding: .utf8) else {
         throw NSError(domain: "Cannot decode file", code: 0, userInfo: nil)
     }
-    // Split the content into lines, including empty lines
-    let lines = content.split(separator: "\n", omittingEmptySubsequences: false)
+s
+    let lines = content.split(separator: "\n", omittingEmptySubsequences: true)
     // Filter out lines that are purely whitespace or start with '#'
     let filteredLines = lines.filter { line in
         let trimmedLine = line.trimmingCharacters(in: .whitespacesAndNewlines)
         return !trimmedLine.isEmpty && !trimmedLine.hasPrefix("#")
     }
-    // Return the count of the filtered lines
     return filteredLines.count
 }
 
-// Write your Quaternion struct here
+
 struct Quaternion {
     let w: Double
     let x: Double
@@ -107,18 +103,16 @@ struct Quaternion {
     }
 }
 
-// Write your Binary Search Tree enum here
 indirect enum BinarySearchTree {
     case empty
     case node(String, BinarySearchTree, BinarySearchTree)
 
     func contains(_ value: String) -> Bool {
-        switch self { //trivial case for empty bst
+        switch self { 
         case .empty:
             return false
         case let .node(v, left, right):
-            //checks for if the current node, the left, or the right node contains the requested value.
-            //left is lesser, right is greater. Keep recursively calling until value is found or empty case is reached.
+            //until value is found or empty case is reached.
             if v == value {
                 return true
             } else if value < v {
@@ -132,10 +126,7 @@ indirect enum BinarySearchTree {
     func insert(_ value: String) -> BinarySearchTree {
         switch self {
         case .empty:
-            return .node(value, .empty, .empty)
-        //check is inserted value is lesser or greater than current node's value
-        //if lesser, value is inserted as left leaf node
-        //if greater, value is inserted as right leaf node.
+            return .node(value, .empty, .empty)ad
         //recurse until value is sorted
         case let .node(v, left, right):
             if value < v {
