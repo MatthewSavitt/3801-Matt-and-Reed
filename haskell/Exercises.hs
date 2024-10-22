@@ -21,10 +21,19 @@ change amount
                 newCounts = Map.insert d count counts
 
 -- Write your first then apply function here
+firstThenApply :: [a] -> (a -> Bool) -> (a -> b) -> Maybe b
+firstThenApply xs p f = f <$> find p xs
 
 -- Write your infinite powers generator here
+powers :: Integral a => a -> [a]
+powers base = iterate (* base) 1
 
 -- Write your line count function here
+meaningfulLineCount :: FilePath -> IO Int
+meaningfulLineCount filePath = do
+    content <- readFile filePath
+    let isValidLine line = not (null line || all isSpace line || "#" `isPrefixOf` dropWhile isSpace line)
+    return $ length $ filter isValidLine $ lines content
 
 -- Write your shape data type here
 
