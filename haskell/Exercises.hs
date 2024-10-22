@@ -1,7 +1,8 @@
 module Exercises
-    ( change,
-      -- put the proper exports here
+    ( change, firstThenApply, powers, meaningfulLineCount,
+      Shape(Sphere, Box), volume, surfaceArea
     ) where
+
 
 import qualified Data.Map as Map
 import Data.Text (pack, unpack, replace)
@@ -20,21 +21,35 @@ change amount
                 (count, newRemaining) = remaining `divMod` d
                 newCounts = Map.insert d count counts
 
--- Write your first then apply function here
+
 firstThenApply :: [a] -> (a -> Bool) -> (a -> b) -> Maybe b
 firstThenApply xs p f = f <$> find p xs
 
--- Write your infinite powers generator here
-powers :: Integral a => a -> [a]
-powers base = iterate (* base) 1
 
--- Write your line count function here
+powers :: (Integral a) => a -> [a]
+powers b = [b^n | n <- [0..]]
+
+
 meaningfulLineCount :: FilePath -> IO Int
-meaningfulLineCount filePath = do
-    content <- readFile filePath
-    let isValidLine line = not (null line || all isSpace line || "#" `isPrefixOf` dropWhile isSpace line)
-    return $ length $ filter isValidLine $ lines content
+meaningfulLineCount path = do
+    contents <- readFile path
+    return $ length $ filter meaningfulLine $ lines contents
+    where
+      meaningfulLine line = not (null line) && not (all isSpace line) && not ("#" `isPrefixOf` (dropWhile isSpace line))
 
--- Write your shape data type here
+
+data Shape = Sphere Double | Box Double Double Double deriving (Show, Eq)
+
+volume :: Shape -> Double
+volume (Sphere r) = 4/3 * pi * r^3
+volume (Box l w h) = l * w * h
+
+surfaceArea :: Shape -> Double
+surfaceArea (Sphere r) = 4 * pi * r^2
+surfaceArea (Box l w h) = 2 * (l*w + l*h + w*h)
+
+is_approx :: Double -> Double -> Bool
+is_approx x y = abs (x - y) < 1e-9  -- tolerance level for approximation
+
 
 -- Write your binary search tree algebraic type here
