@@ -1,7 +1,9 @@
 module Exercises
     ( change, firstThenApply, powers, meaningfulLineCount,
-      Shape(Sphere, Box), volume, surfaceArea
+      Shape(Sphere, Box), volume, surfaceArea,
+      BST(Empty, Node), size, contains, insert, inorder
     ) where
+
 
 
 import qualified Data.Map as Map
@@ -52,4 +54,41 @@ is_approx :: Double -> Double -> Bool
 is_approx x y = abs (x - y) < 1e-9  -- tolerance level for approximation
 
 
--- Write your binary search tree algebraic type here
+
+data BST a = Empty | Node a (BST a) (BST a) deriving (Eq)
+
+instance Show a => Show (BST a) where
+    show = showBST
+
+showBST :: Show a => BST a -> String
+showBST Empty = "()"
+showBST (Node x Empty Empty) = "(" ++ show x ++ ")"
+showBST (Node x left Empty) = "(" ++ showBST left ++ show x ++ ")"
+showBST (Node x Empty right) = "(" ++ show x ++ showBST right ++ ")"
+showBST (Node x left right) = "(" ++ showBST left ++ show x ++ showBST right ++ ")"
+
+empty :: BST a
+empty = Empty
+
+size :: BST a -> Int
+size Empty = 0
+size (Node _ left right) = 1 + size left + size right
+
+contains :: (Ord a) => a -> BST a -> Bool
+contains _ Empty = False
+contains x (Node y left right)
+    | x == y = True
+    | x < y = contains x left
+    | otherwise = contains x right
+
+insert :: (Ord a) => a -> BST a -> BST a
+insert x Empty = Node x Empty Empty
+insert x (Node y left right)
+    | x < y = Node y (insert x left) right
+    | x > y = Node y left (insert x right)
+    | otherwise = Node y left right
+
+inorder :: BST a -> [a]
+inorder Empty = []
+inorder (Node x left right) = inorder left ++ [x] ++ inorder right
+
