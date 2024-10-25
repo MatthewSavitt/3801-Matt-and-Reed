@@ -13,13 +13,11 @@ export function change(amount: bigint): Map<bigint, bigint> {
   return counts
 }
 
-// Write your first then apply function here
 export function firstThenApply<T, U>(arr: T[], predicate: (x: T) => boolean, func: (x: T) => U): U | undefined {
   const result = arr.find(predicate);
   return result !== undefined ? func(result) : undefined;
 }
 
-// Write your powers generator here
 export function* powersGenerator(base: bigint): Generator<bigint> {
   let result = 1n;
   while (true) {
@@ -28,7 +26,6 @@ export function* powersGenerator(base: bigint): Generator<bigint> {
   }
 }
 
-// Write your line count function here
 export async function meaningfulLineCount(filePath: string): Promise<number> {
     const fileHandle = await open(filePath, 'r');
     try {
@@ -43,7 +40,6 @@ export async function meaningfulLineCount(filePath: string): Promise<number> {
     }
 }
 
-// Write your shape type and associated functions here
 export type Shape = 
   { kind: "Box", width: number, length: number, depth: number } | 
   { kind: "Sphere", radius: number };
@@ -64,7 +60,6 @@ export function volume(shape: Shape): number {
     }
 }
 
-// Write your binary search tree implementation here
 export interface BinarySearchTree<T> {
   insert(value: T): BinarySearchTree<T>;
   contains(value: T): boolean;
