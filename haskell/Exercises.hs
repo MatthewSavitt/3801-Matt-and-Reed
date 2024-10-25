@@ -29,7 +29,7 @@ firstThenApply xs p f = f <$> find p xs
 
 
 powers :: (Integral a) => a -> [a]
-powers b = [b^n | n <- [0..]]
+powers b = [(b^) n | n <- [0..]]
 
 
 meaningfulLineCount :: FilePath -> IO Int
