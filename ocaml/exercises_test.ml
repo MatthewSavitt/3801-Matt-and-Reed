@@ -31,7 +31,6 @@ expect (change(10000000000005) = [400000000000; 0; 1; 0]);;
 
 (* Uncomment the following tests as you complete the exercises *)
 
-(*
 let non_empty s = s <> "";;
 let length_greater_than_3 s = String.length s > 3;;
 let lower s = Some (String.lowercase_ascii s);;
@@ -76,27 +75,27 @@ let s2 = Box (3.0, 4.0, 5.0) in (
 );;
 
 suite "binary search tree";;
-let t1 = Empty in
-let t2 = insert 5 t1 in
-let t3 = insert 3 t2 in
-let t4 = insert 7 t3 in
-let t5 = insert 4 t4 in (
-  expect (size t1 = 0);
-  expect (size t2 = 1);
-  expect (size t3 = 2);
-  expect (size t4 = 3);
-  expect (size t5 = 4);
-  expect (contains 7 t1 = false);
-  expect (contains 7 t2 = false);
-  expect (contains 7 t3 = false);
-  expect (contains 7 t4 = true);
-  expect (contains 7 t5 = true);
-  expect (inorder t1 = []);
-  expect (inorder t2 = [5]);
-  expect (inorder t3 = [3; 5]);
-  expect (inorder t4 = [3; 5; 7]);
-  expect (inorder t5 = [3; 4; 5; 7]);
+let t1 = BST.empty in
+let t2 = BST.insert 5 t1 in
+let t3 = BST.insert 3 t2 in
+let t4 = BST.insert 7 t3 in
+let t5 = BST.insert 4 t4 in (
+  expect (BST.size t1 = 0);
+  expect (BST.size t2 = 1);
+  expect (BST.size t3 = 2);
+  expect (BST.size t4 = 3);
+  expect (BST.size t5 = 4);
+  expect (BST.contains 7 t1 = false);
+  expect (BST.contains 7 t2 = false);
+  expect (BST.contains 7 t3 = false);
+  expect (BST.contains 7 t4 = true);
+  expect (BST.contains 7 t5 = true);
+  expect (BST.inorder t1 = []);
+  expect (BST.inorder t2 = [5]);
+  expect (BST.inorder t3 = [3; 5]);
+  expect (BST.inorder t4 = [3; 5; 7]);
+  expect (BST.inorder t5 = [3; 4; 5; 7]);
 );;
-*)
+
 
 Printf.printf "\n%d passed, %d failed\n" !passes !failures;;
