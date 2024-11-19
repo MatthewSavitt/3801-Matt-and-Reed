@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-
+from typing import Callable, List, Optional
 
 def change(amount: int) -> dict[int, int]:
     if not isinstance(amount, int):
@@ -12,11 +12,9 @@ def change(amount: int) -> dict[int, int]:
     return counts
 
 
-def first_then_lower_case(strings: list, predicate: int, /) -> str: 
-    if not strings:
-        return None
+def first_then_lower_case(strings: List[str], predicate: Callable[[str], bool]) -> Optional[str]:
     for string in strings:
-        if predicate(string): 
+        if predicate(string):
             return string.lower()
 
 
@@ -39,9 +37,9 @@ def say(initial_string = None, /):
     return nextsay
 
 
-def meaningful_line_count(filename, /):
+def meaningful_line_count(file_name, /):
     count = 0
-    with open(filename, 'r', encoding='utf-8') as file: 
+    with open(file_name, 'r', encoding='utf-8') as file: 
         for line in file:
             trimmed = line.strip()
             if trimmed and not trimmed.startswith('#'):

@@ -1,5 +1,3 @@
-import unittest
-import pytest
 from exercises import (
     first_then_lower_case,
     say,
