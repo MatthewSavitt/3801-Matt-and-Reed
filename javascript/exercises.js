@@ -23,13 +23,8 @@ export function firstThenLowerCase(strings, predicate) {
 
 
 export function* powersGenerator({ base, limit }) {
-  if (typeof base !== 'number' || typeof limit !== 'number' || limit < 0) {
-    throw new TypeError('Invalid arguments: base must be a number and exponent must be a positive number')
-  }
-  let power = 1
-  while (power <= limit) {
+  for (let power = 1; power <= limit; power *= base) {
     yield power
-    power *= base
   }
 }
 
@@ -56,7 +51,7 @@ export async function meaningfulLineCount(filename) {
   const content = await file.readFile('utf-8')
   const lines = content.split('\n')
   let count = 0
-  for (line in lines) {
+  for (let line in lines) {
     const trimmed = line.trim()
     if (trimmed && !trimmed.startsWith('#')) { 
       count++

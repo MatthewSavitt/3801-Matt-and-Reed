@@ -76,17 +76,17 @@ describe("The say function", () => {
 
 describe("The powers generator", () => {
   it("works as expected", () => {
-    const g1 = powersGenerator({ base: 2, exponent: 1 })
+    const g1 = powersGenerator({ base: 2, limit: 1 })
     deepEqual(g1.next(), { value: 1, done: false })
     deepEqual(g1.next(), { value: undefined, done: true })
-    const g2 = powersGenerator({ base: 3, exponent: 100 })
+    const g2 = powersGenerator({ base: 3, limit: 100 })
     deepEqual(g2.next(), { value: 1, done: false })
     deepEqual(g2.next(), { value: 3, done: false })
     deepEqual(g2.next(), { value: 9, done: false })
     deepEqual(g2.next(), { value: 27, done: false })
     deepEqual(g2.next(), { value: 81, done: false })
     deepEqual(g2.next(), { value: undefined, done: true })
-    deepEqual([...powersGenerator({ base: 3, exponent: 27 })], [1, 3, 9, 27])
+    deepEqual([...powersGenerator({ base: 3, limit: 27 })], [1, 3, 9, 27])
   })
 })
 
