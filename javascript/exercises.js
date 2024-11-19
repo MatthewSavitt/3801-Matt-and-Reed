@@ -1,5 +1,5 @@
 import { open } from "node:fs/promises"
-import { readFile } from "node:fs/promises"
+
 
 export function change(amount) {
   if (!Number.isInteger(amount)) {
@@ -16,153 +16,121 @@ export function change(amount) {
   return counts
 }
 
-// Write your first then lower case function here
-export function firstThenLowerCase(strings, min_length) {
-  // Check if the array is empty
-  if (strings?.length === 0) {
-    return undefined;
-  }
-  // Iterate through the array and find the first string with a length greater than or equal to min_length
-  for (const element of strings) {
-    if (min_length(element)) { // type coercion to check for length
-      return element.toLowerCase();
-    }
-  }
-  // If no string meets the minimum length, return nil
-  return undefined;
+
+export function firstThenLowerCase(strings, predicate) {
+  return strings.find(predicate)?.toLowerCase()
 }
 
-// Write your powers generator here
-export function* powersGenerator({ base, exponent }) {
-  if (typeof base !== 'number' || typeof exponent !== 'number' || exponent < 0) {
-    throw new TypeError('Invalid arguments: base must be a number and exponent must be a positive number');
+
+export function* powersGenerator({ base, limit }) {
+  if (typeof base !== 'number' || typeof limit !== 'number' || limit < 0) {
+    throw new TypeError('Invalid arguments: base must be a number and exponent must be a positive number')
   }
-  let currentPower = 1;
-  while (currentPower <= exponent) {
-    yield currentPower;
-    currentPower *= base;
+  let power = 1
+  while (power <= limit) {
+    yield power
+    power *= base
   }
-  return undefined;
 }
 
-// Write your say function here
+
 export function say(initialString) {
   if (initialString === undefined) {
-    return "";
+    return ""
   }
-  function inner(nextString) {
-    if (nextString === undefined) { // Check if next_string is None, indicating termination
-      return initialString; // Terminate and return the initial string
+  
+  function nextsay(nextString) {
+    if (nextString === undefined) {
+      return initialString
     }
     else {
-      return say(initialString.concat(" ", nextString)); // Still going? concatenate.
+      return say(initialString.concat(" ", nextString))
     }
   }
-  return inner
+  return nextsay
 }
 
-// Write your line count function here
+
 export async function meaningfulLineCount(filename) {
-    try {
-        const file = await open(filename, 'r'); // Open the file
-        const content = await file.readFile('utf-8'); // Read the file contents
-        await file.close(); // Ensure the file is closed after reading
-        const lines = content.split('\n'); // Split the content by newlines
-        let count = 0;
-        
-        for (let line of lines) {
-            const trimmed = line.trim(); // Trim whitespace from the line
-            if (trimmed && !trimmed.startsWith('#')) { // Check for meaningful lines
-                count++;
-            }
-        }
-        return count; // Return the count of meaningful lines
-    } catch (err) {
-        return Promise.reject(new Error('No such file')); // Reject with an error if file not found
+  const file = await open(filename, 'r')
+  const content = await file.readFile('utf-8')
+  const lines = content.split('\n')
+  let count = 0
+  for (line in lines) {
+    const trimmed = line.trim()
+    if (trimmed && !trimmed.startsWith('#')) { 
+      count++
     }
-}
+  }
+  return count
+} 
 
-// Write your Quaternion class here
+
 export class Quaternion {
   constructor(a, b, c, d) {
-      this.a = a;
-      this.b = b;
-      this.c = c;
-      this.d = d;
-      Object.freeze(this); // Freeze the object to make it immutable
+    this.a = a
+    this.b = b
+    this.c = c
+    this.d = d
+    Object.freeze(this)
   }
 
-  // Getter for conjugate
   get conjugate() {
-      return new Quaternion(this.a, -this.b, -this.c, -this.d);
+    return new Quaternion(this.a, -this.b, -this.c, -this.d)
   }
 
-  // Getter for coefficients
   get coefficients() {
-      return [this.a, this.b, this.c, this.d];
+    return [this.a, this.b, this.c, this.d]
   }
 
-  // Addition operation
   plus(other) {
-      return new Quaternion(
-          this.a + other.a,
-          this.b + other.b,
-          this.c + other.c,
-          this.d + other.d
-      );
+    return new Quaternion(
+      this.a + other.a,
+      this.b + other.b,
+      this.c + other.c,
+      this.d + other.d
+    )
   }
 
-  // Multiplication operation
   times(other) {
-      return new Quaternion(
-          this.a * other.a - this.b * other.b - this.c * other.c - this.d * other.d,
-          this.a * other.b + this.b * other.a + this.c * other.d - this.d * other.c,
-          this.a * other.c - this.b * other.d + this.c * other.a + this.d * other.b,
-          this.a * other.d + this.b * other.c - this.c * other.b + this.d * other.a
-      );
+    return new Quaternion(
+      this.a * other.a - this.b * other.b - this.c * other.c - this.d * other.d,
+      this.a * other.b + this.b * other.a + this.c * other.d - this.d * other.c,
+      this.a * other.c - this.b * other.d + this.c * other.a + this.d * other.b,
+      this.a * other.d + this.b * other.c - this.c * other.b + this.d * other.a
+    )
   }
 
-  // Equality check
   equals(other) {
-      return (
-          this.a === other.a &&
-          this.b === other.b &&
-          this.c === other.c &&
-          this.d === other.d
-      );
+    return (
+      this.a === other.a &&
+      this.b === other.b &&
+      this.c === other.c &&
+      this.d === other.d
+    )
   }
 
-  // String representation
   toString() {
-      const parts = [];
-
-      if (this.a !== 0) parts.push(`${this.a}`);
-
-      if (this.b !== 0) {
-          if (this.b === 1) parts.push("i");
-          else if (this.b === -1) parts.push("-i");
-          else parts.push(`${this.b}i`);
-      }
-
-      if (this.c !== 0) {
-          if (this.c === 1) parts.push("j");
-          else if (this.c === -1) parts.push("-j");
-          else parts.push(`${this.c}j`);
-      }
-
-      if (this.d !== 0) {
-          if (this.d === 1) parts.push("k");
-          else if (this.d === -1) parts.push("-k");
-          else parts.push(`${this.d}k`);
-      }
-
-      if (parts.length === 0) return "0";
-
-      // Ensure proper ordering and joining, fix sign issues
-      let result = parts.join("+");
-
-      // Replace all instances of "+-" with "-"
-      result = result.replace(/\+\-/g, "-");
-      return result;
+    const parts = []
+    if (this.a !== 0) parts.push(`${this.a}`)
+    if (this.b !== 0) {
+      if (this.b === 1) parts.push("i")
+      else if (this.b === -1) parts.push("-i")
+      else parts.push(`${this.b}i`)
+    }
+    if (this.c !== 0) {
+      if (this.c === 1) parts.push("j")
+      else if (this.c === -1) parts.push("-j")
+      else parts.push(`${this.c}j`)
+    }
+    if (this.d !== 0) {
+      if (this.d === 1) parts.push("k")
+      else if (this.d === -1) parts.push("-k")
+      else parts.push(`${this.d}k`)
+    }
+    if (parts.length === 0) return "0"
+    let string = parts.join("+")
+    string = string.replace(/\+\-/g, "-")
+    return string
   }
 }

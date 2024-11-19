@@ -13,155 +13,139 @@ function change(amount)
   return counts
 end
 
--- Write your first then lower case function here
-function first_then_lower_case(strings, min_length)
-  -- Check if the array is empty
+
+function first_then_lower_case(strings, predicate)
   if #strings == 0 then
     return nil
   end
-  for _, s in ipairs(strings) do
-    if type(s) ~= "string" then
+  for _, string in ipairs(strings) do
+    if type(string) ~= "string" then
       error("strings must be a list of type str")
     end
-  end
-  -- Iterate through the array and find the first string with a length greater than or equal to min_length
-  for _, string in ipairs(strings) do
-    if min_length(string) then
+    if predicate(string) then
       return string.lower(string)
     end
   end
-  -- If no string meets the minimum length, return nil
-  return nil
 end
 
--- Write your powers generator here
+
 function powers_generator(base, limit)
-  local power = 0
+  local power = 1
   return coroutine.create(function()
-    while true do
-      local value = base ^ power
-      if value > limit then
-        return -- end the coroutine once the limit is exceeded
-      end
-      coroutine.yield(value)
-      power = power + 1
+    while power <= limit do
+      coroutine.yield(power)
+      power *= base
     end
   end)
 end
 
--- Write your say function here
+
 function say(initial_string)
   if initial_string == nil then
-      return ""
+    return ""
   end
-  function inner(next_string)
-      if next_string == nil then -- Check if next_string is None, indicating termination
-          return initial_string -- Terminate and return the initial string
-      else
-          return say(initial_string .. " " .. next_string) -- Still going? concatenate.
-      end
+  function nextsay(next_string)
+    if next_string == nil then
+      return initial_string
+    else
+      return say(initial_string .. " " .. next_string)
+    end
   end
-  return inner
+  return nextsay
 end
 
 
--- Write your line count function here
 function meaningful_line_count(filename)
   local file, err = io.open(filename, "r")
   if not file then
-      error("No such file") -- throws error if file not found
+    error("No such file")
   end
-
   local count = 0
   for line in file:lines() do
-      local trimmed = line:match("^%s*(.-)%s*$") -- trims whitespace from line using pattern match
-      if #trimmed > 0 and trimmed:sub(1, 1) ~= "#" then -- checks if trimmed line is not empty nor has # as a starting character
-          count = count + 1
-      end
+    local trimmed = line:match("^%s*(.-)%s*$")
+    if #trimmed > 0 and trimmed:sub(1, 1) ~= "#" then
+      count = count + 1
+    end
   end
-
   file:close()
-  return count -- returns number of non-empty lines
+  return count
 end
 
-  -- Write your Quaternion table here
-  Quaternion = {}
-  Quaternion.__index = Quaternion
+Quaternion = {}
+Quaternion.__index = Quaternion
   
-  function Quaternion.new(a, b, c, d)
-      local self = setmetatable({}, Quaternion)
-      self.a, self.b, self.c, self.d = a or 0, b or 0, c or 0, d or 0
-      return self
+function Quaternion.new(a, b, c, d)
+  local self = setmetatable({}, Quaternion)
+  self.a, self.b, self.c, self.d = a or 0, b or 0, c or 0, d or 0
+  return self
+end
+  
+function Quaternion:coefficients()
+  return {self.a, self.b, self.c, self.d}
+end
+  
+function Quaternion:conjugate()
+  return Quaternion.new(self.a, -self.b, -self.c, -self.d)
+end
+  
+function Quaternion.__add(q1, q2)
+  return Quaternion.new(
+    q1.a + q2.a,
+    q1.b + q2.b,
+    q1.c + q2.c,
+    q1.d + q2.d
+  )
+end
+  
+function Quaternion.__mul(q1, q2)
+  return Quaternion.new(
+    q1.a * q2.a - q1.b * q2.b - q1.c * q2.c - q1.d * q2.d,
+    q1.a * q2.b + q1.b * q2.a + q1.c * q2.d - q1.d * q2.c,
+    q1.a * q2.c - q1.b * q2.d + q1.c * q2.a + q1.d * q2.b,
+    q1.a * q2.d + q1.b * q2.c - q1.c * q2.b + q1.d * q2.a
+  )
+end
+  
+function Quaternion.__eq(q1, q2)
+  return q1.a == q2.a and q1.b == q2.b and q1.c == q2.c and q1.d == q2.d
+end
+  
+function Quaternion:__tostring()
+  local parts = {}
+  if self.a ~= 0 then table.insert(parts, tostring(self.a)) end
+  if self.b ~= 0 then
+    if self.b == 1 then
+      table.insert(parts, "i")
+    elseif self.b == -1 then
+      table.insert(parts, "-i")
+    else
+      table.insert(parts, tostring(self.b) .. "i")
+    end
   end
-  
-  function Quaternion:coefficients()
-      return {self.a, self.b, self.c, self.d}
+  if self.c ~= 0 then
+    if self.c == 1 then
+      table.insert(parts, "j")
+    elseif self.c == -1 then
+      table.insert(parts, "-j")
+    else
+      table.insert(parts, tostring(self.c) .. "j")
+    end
   end
-  
-  function Quaternion:conjugate()
-      return Quaternion.new(self.a, -self.b, -self.c, -self.d)
+  if self.d ~= 0 then
+    if self.d == 1 then
+      table.insert(parts, "k")
+    elseif self.d == -1 then
+      table.insert(parts, "-k")
+    else
+      table.insert(parts, tostring(self.d) .. "k")
+    end
   end
-  
-  function Quaternion.__add(q1, q2) -- + metamethod
-      return Quaternion.new(
-          q1.a + q2.a,
-          q1.b + q2.b,
-          q1.c + q2.c,
-          q1.d + q2.d
-      )
+  if #parts == 0 then
+    return "0"
+  else
+    local string = table.concat(parts, "+")
+    string = result:gsub("%+%-", "-") -- fix signs like "+-" to "-"
+    return string
   end
-  
-  function Quaternion.__mul(q1, q2) -- * metamethod
-      return Quaternion.new(
-          q1.a * q2.a - q1.b * q2.b - q1.c * q2.c - q1.d * q2.d,
-          q1.a * q2.b + q1.b * q2.a + q1.c * q2.d - q1.d * q2.c,
-          q1.a * q2.c - q1.b * q2.d + q1.c * q2.a + q1.d * q2.b,
-          q1.a * q2.d + q1.b * q2.c - q1.c * q2.b + q1.d * q2.a
-      )
-  end
-  
-  function Quaternion.__eq(q1, q2) -- == metamethod
-      return q1.a == q2.a and q1.b == q2.b and q1.c == q2.c and q1.d == q2.d
-  end
-  
-  function Quaternion:__tostring()
-      local parts = {}
-  
-      if self.a ~= 0 then table.insert(parts, tostring(self.a)) end --checks when printing to display proper signs
-      if self.b ~= 0 then
-          if self.b == 1 then
-              table.insert(parts, "i")
-          elseif self.b == -1 then
-              table.insert(parts, "-i")
-          else
-              table.insert(parts, tostring(self.b) .. "i")
-          end
-      end
-      if self.c ~= 0 then
-          if self.c == 1 then
-              table.insert(parts, "j")
-          elseif self.c == -1 then
-              table.insert(parts, "-j")
-          else
-              table.insert(parts, tostring(self.c) .. "j")
-          end
-      end
-      if self.d ~= 0 then
-          if self.d == 1 then
-              table.insert(parts, "k")
-          elseif self.d == -1 then
-              table.insert(parts, "-k")
-          else
-              table.insert(parts, tostring(self.d) .. "k")
-          end
-      end
-  
-      if #parts == 0 then
-          return "0"
-      else
-          local result = table.concat(parts, "+")
-          result = result:gsub("%+%-", "-") -- fix signs like "+-" to "-"
-          return result
-      end
-  end
+end
   

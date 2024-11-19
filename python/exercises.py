@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from collections.abc import Callable
 
 
 def change(amount: int) -> dict[int, int]:
@@ -13,53 +12,43 @@ def change(amount: int) -> dict[int, int]:
     return counts
 
 
-# Write your first then lower case function here
-def first_then_lower_case(strings: list, min_length: int) -> str: 
-    # Check if the array is empty
+def first_then_lower_case(strings: list, predicate: int, /) -> str: 
     if not strings:
         return None
-    # Iterate through the array and find the first string with a length greater than or equal to min_length
     for string in strings:
-        if min_length(string): #ugh... I have to do it like this because TECHNICALLY min_length is also a predicate function (for values like nonempty and greater_than_three). So ugly.
+        if predicate(string): 
             return string.lower()
-    # If no string meets the minimum length, return None
-    return None
-        
-# Write your powers generator here
-def powers_generator(*, base: int, limit: int): # keyword-only input
-    power = 0
-    while True:
-        current_value = base ** power
-        if current_value > limit: 
-            break
-        yield current_value
-        power += 1
 
-# Write your say function here
-def say(initial_string = None):
+
+def powers_generator(*, base: int, limit: int): 
+    power = 1
+    while power <= limit:
+        yield power
+        power *= base
+
+
+def say(initial_string = None, /):
     if initial_string is None:
         return ""
-    def inner(next_string = None):
-        if next_string is None:  # Check if next_string is None, indicating termination
-            return initial_string  # Terminate and return the initial string
+    
+    def nextsay(next_string = None):
+        if next_string is None:  
+            return initial_string  
         else:
-            return say(initial_string + " " + next_string) # Still going? concatenate.
-    return inner
+            return say(initial_string + " " + next_string) 
+    return nextsay
 
-# Write your line count function here
-def meaningful_line_count(filename):
-    try:
-        count = 0
-        with open(filename, 'r', encoding='utf-8') as file: # "with" statement automatically checks if file exists, and raises error if not, utf-8 for character-reading fix
-            for line in file:
-                trimmed = line.strip() # strip() function trims whitespace from line
-                if trimmed and not trimmed.startswith('#'): # checks if line is not empty nor has # as a starting character
-                    count += 1
-        return count # returns number of non-empty lines
-    except FileNotFoundError:
-        raise FileNotFoundError("No such file") # raises specific "No such file" error for testing
 
-# Write your Quaternion class here
+def meaningful_line_count(filename, /):
+    count = 0
+    with open(filename, 'r', encoding='utf-8') as file: 
+        for line in file:
+            trimmed = line.strip()
+            if trimmed and not trimmed.startswith('#'):
+                count += 1
+    return count 
+
+
 @dataclass(frozen=True)
 class Quaternion:
     a: float
@@ -89,12 +78,8 @@ class Quaternion:
 
     def __str__(self):
         parts = []
-
-        # Add real part (a) if non-zero
         if self.a != 0:
             parts.append(f"{self.a}")
-
-        # Add imaginary parts (i, j, k) if non-zero, ensuring order and proper signs
         if self.b != 0:
             if self.b == 1.0:
                 parts.append("i")
@@ -102,7 +87,6 @@ class Quaternion:
                 parts.append("-i")
             else:
                 parts.append(f"{self.b}i")
-
         if self.c != 0:
             if self.c == 1.0:
                 parts.append("j")
@@ -110,7 +94,6 @@ class Quaternion:
                 parts.append("-j")
             else:
                 parts.append(f"{self.c}j")
-
         if self.d != 0:
             if self.d == 1.0:
                 parts.append("k")
@@ -118,15 +101,11 @@ class Quaternion:
                 parts.append("-k")
             else:
                 parts.append(f"{self.d}k")
-
         if not parts:
             return "0"
-
-        # Ensure proper ordering and joining, fix sign issues
-        result = "+".join(parts)
-        result = result.replace("+-", "-").replace("+0", "")
-
-        return result
+        string = "+".join(parts)
+        string = string.replace("+-", "-").replace("+0", "")
+        return string
 
     @property
     def coefficients(self):
