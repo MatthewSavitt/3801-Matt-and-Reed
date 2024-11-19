@@ -46,21 +46,19 @@ export function say(initialString) {
 }
 
 
-export async function meaningfulLineCount(filename) {
-  const file = await open(filename, 'r')
-  const content = await file.readFile('utf-8')
-  file.close();
+export async function meaningfulLineCount(fileName) {
+  let count = 0;
   
-  const lines = content.split('\n')
-  let count = 0
-  for (const line of lines) {
-    const trimmed = line.trim()
-    if (trimmed && !trimmed.startsWith('#')) { 
-      count++
+  for await (const line of fileName.readLines()) {
+    const trimmed = line.trim();
+    if (trimmed && !trimmed.startsWith("#")) {
+      count++;
     }
   }
-  return count
-} 
+  
+  return count;
+}
+
 
 
 export class Quaternion {
