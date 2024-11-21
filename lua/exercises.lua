@@ -34,7 +34,7 @@ function powers_generator(base, limit)
   return coroutine.create(function()
     while power <= limit do
       coroutine.yield(power)
-      power *= base
+      power = power * base
     end
   end)
 end
@@ -144,7 +144,7 @@ function Quaternion:__tostring()
     return "0"
   else
     local string = table.concat(parts, "+")
-    string = result:gsub("%+%-", "-") -- fix signs like "+-" to "-"
+    string = string:gsub("%+%-", "-")
     return string
   end
 end
