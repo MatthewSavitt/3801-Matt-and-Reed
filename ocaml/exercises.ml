@@ -1,5 +1,6 @@
 exception Negative_Amount
 
+
 let change amount =
   if amount < 0 then
     raise Negative_Amount
@@ -12,12 +13,14 @@ let change amount =
     in
     aux amount denominations
 
+
 let rec first_then_apply (lst: 'a list) (predicate: 'a -> bool) (func: 'a -> 'b option): 'b option =
   match lst with
   | [] -> None
   | x :: xs -> 
     if predicate x then (func x)
     else first_then_apply xs predicate func
+
 
 let rec powers_generator (base: int) : int Seq.t =
   let rec aux (current: int) () = Seq.Cons (current, aux (current * base)) in
@@ -45,6 +48,7 @@ type shape =
   | Sphere of float
   | Box of float * float * float
 
+
 let volume (s: shape) : float =
   match s with
   | Sphere radius -> (4.0 /. 3.0) *. Float.pi *. radius ** 3.0
@@ -66,14 +70,14 @@ let to_string (s: shape) : string =
 
 module BST : sig
   type 'a bst
-
   val empty : 'a bst
   val insert : 'a -> 'a bst -> 'a bst
   val contains : 'a -> 'a bst -> bool
   val size : 'a bst -> int
   val inorder : 'a bst -> 'a list
-end = struct
 
+
+end = struct
   type 'a bst = 
     | Empty
     | Node of 'a * 'a bst * 'a bst
@@ -106,5 +110,6 @@ end = struct
     | Empty -> []
     | Node (v, left, right) -> inorder left @ [v] @ inorder right
 end
+
 
 open BST
