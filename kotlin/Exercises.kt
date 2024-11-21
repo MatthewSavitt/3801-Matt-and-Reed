@@ -1,6 +1,9 @@
 import java.io.BufferedReader
 import java.io.FileReader
 import java.io.IOException
+import java.io.FileNotFoundException
+import java.io.File
+
 
 fun change(amount: Long): Map<Int, Long> {
     require(amount >= 0) { "Amount cannot be negative" }
@@ -14,31 +17,35 @@ fun change(amount: Long): Map<Int, Long> {
     return counts
 }
 
-fun firstThenLowerCase(list: List<String>, predicate: (String) -> Boolean): String? {
-    return list.firstOrNull(predicate)?.lowercase()
+
+fun firstThenLowerCase(strings: List<String>, predicate: (String) -> Boolean): String? {
+    return strings.firstOrNull(predicate)?.lowercase()
 }
 
 
-class Say(private val words: MutableList<String> = mutableListOf()) {
+class Say(private val words: List<String> = emptyList()) {
+
     fun and(word: String): Say {
-        words.add(word)
-        return this
+        return Say(words + word)
     }
 
     val phrase: String
         get() = words.joinToString(" ")
 }
 
-
 fun say(word: String = ""): Say {
     return if (word.isEmpty()) {
-        Say() 
+        Say()
     } else {
-        Say().and(word)
+        Say(listOf(word))
     }
 }
 
+
 fun meaningfulLineCount(filename: String): Long {
+    if (!File(filename).exists()) {
+        throw FileNotFoundException("No such file")
+    }
     return BufferedReader(FileReader(filename)).use { reader ->
         reader.lineSequence()
             .filter { it.isNotBlank() && !it.trimStart().startsWith("#") }
@@ -55,6 +62,15 @@ data class Quaternion(val w: Double, val x: Double, val y: Double, val z: Double
         val J = Quaternion(0.0, 0.0, 1.0, 0.0)
         val K = Quaternion(0.0, 0.0, 0.0, 1.0)
     }
+
+    val a: Double
+        get() = w
+    val b: Double
+        get() = x
+    val c: Double
+        get() = y
+    val d: Double
+        get() = z
 
     operator fun plus(q: Quaternion): Quaternion {
         return Quaternion(w + q.w, x + q.x, y + q.y, z + q.z)
@@ -78,44 +94,62 @@ data class Quaternion(val w: Double, val x: Double, val y: Double, val z: Double
     }
 
     override fun toString(): String {
-        return "($w, $x, $y, $z)"
+        val sb = StringBuilder()
+        if (w != 0.0) sb.append(w)
+        if (x != 0.0) {
+            if (sb.isNotEmpty() && x > 0) sb.append("+")
+            if (x == -1.0) sb.append("-i") else if (x == 1.0) sb.append("i") else sb.append(x).append("i")
+        }
+        if (y != 0.0) {
+            if (sb.isNotEmpty() && y > 0) sb.append("+")
+            if (y == -1.0) sb.append("-j") else if (y == 1.0) sb.append("j") else sb.append(y).append("j")
+        }
+        if (z != 0.0) {
+            if (sb.isNotEmpty() && z > 0) sb.append("+")
+            if (z == -1.0) sb.append("-k") else if (z == 1.0) sb.append("k") else sb.append(z).append("k")
+        }
+        return if (sb.isEmpty()) "0" else sb.toString()
     }
 }
 
 
 sealed interface BinarySearchTree {
-    fun contains(value: String): Boolean
-    fun insert(value: String): BinarySearchTree
+    fun contains(nodeValue: String): Boolean
+    fun insert(nodeValue: String): BinarySearchTree
     fun size(): Int
 
     object Empty : BinarySearchTree {
-        override fun contains(value: String): Boolean = false
-        override fun insert(value: String): BinarySearchTree = Node(value, Empty, Empty)
+        override fun contains(nodeValue: String): Boolean = false
+        override fun insert(nodeValue: String): BinarySearchTree = Node(nodeValue, Empty, Empty)
         override fun size(): Int = 0
-        override fun toString(): String = ""
+        override fun toString(): String = "()"
     }
 
-    data class Node(val value: String, val left: BinarySearchTree, val right: BinarySearchTree) : BinarySearchTree {
-        override fun contains(value: String): Boolean {
+    data class Node
+    (
+    val nodeValue: String, 
+    val left: BinarySearchTree, 
+    val right: BinarySearchTree
+    ) : 
+    BinarySearchTree {
+        override fun contains(nodeValue: String): Boolean {
             return when {
-                //Keep recursively calling until value is found or empty case is reached.
-                this.value == value -> true
-                value < this.value -> left.contains(value)
-                else -> right.contains(value)
+                this.nodeValue == nodeValue -> true
+                nodeValue < this.nodeValue -> left.contains(nodeValue)
+                else -> right.contains(nodeValue)
             }
         }
 
-        override fun insert(value: String): BinarySearchTree {
+        override fun insert(nodeValue: String): BinarySearchTree {
             return when {
-                //recurse until value is sorted
-                value < this.value -> copy(left = left.insert(value))
-                value > this.value -> copy(right = right.insert(value))
+                nodeValue < this.nodeValue -> copy(left = left.insert(nodeValue))
+                nodeValue > this.nodeValue -> copy(right = right.insert(nodeValue))
                 else -> this
             }
         }
-        //size will keep recursively being checked and accumulated until final size is obtained.
+
         override fun size(): Int = 1 + left.size() + right.size()
 
-        override fun toString(): String = "($left$value$right)"
+        override fun toString(): String = "($left$nodeValue$right)".replace("()", "")
     }
 }
