@@ -35,14 +35,12 @@ func cook(name string, waiter chan *Order) {
 func customer(name string, waiter chan *Order, wg *sync.WaitGroup) {
 	defer wg.Done()
 	mealsEaten := 0
-
 	for mealsEaten < 5 {
 		order := &Order{
 			id:       orderID.Add(1),
 			customer: name,
 			reply:    make(chan *Order, 1),
 		}
-
 		log.Println(name, "placed order", order.id)
 		select {
 		case waiter <- order:
@@ -53,30 +51,33 @@ func customer(name string, waiter chan *Order, wg *sync.WaitGroup) {
 			do(5, name, "waiting too long, abandoning order", order.id)
 		}
 	}
-
 	log.Println(name, "going home")
 }
 
 func main() {
 	rand.Seed(time.Now().UnixNano())
-
 	waiter := make(chan *Order, 3)
-
 	var wg sync.WaitGroup
-
 	go cook("Remy", waiter)
 	go cook("Colette", waiter)
 	go cook("Linguini", waiter)
-
-	customers := []string{"Ani", "Bai", "Cat", "Dao", "Eve", "Fay", "Gus", "Hua", "Iza", "Jai"}
-
+	customers := []string{
+		"Ani", 
+		"Bai", 
+		"Cat", 
+		"Dao", 
+		"Eve", 
+		"Fay", 
+		"Gus", 
+		"Hua", 
+		"Iza", 
+		"Jai"
+	}
 	for _, name := range customers {
 		wg.Add(1)
 		go customer(name, waiter, &wg)
 	}
-
 	wg.Wait()
-
 	log.Println("Restaurant closing")
 	close(waiter)
 }
