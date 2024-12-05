@@ -32,8 +32,8 @@ func cook(name string, waiter chan *Order) {
 	}
 }
 
-func customer(name string, waiter chan *Order, wg *sync.WaitGroup) {
-	defer wg.Done()
+func customer(name string, waiter chan *Order, waitgroup *sync.WaitGroup) {
+	defer waitgroup.Done()
 	mealsEaten := 0
 	for mealsEaten < 5 {
 		order := &Order{
@@ -57,16 +57,16 @@ func customer(name string, waiter chan *Order, wg *sync.WaitGroup) {
 func main() {
 	rand.New(rand.NewSource(time.Now().UnixNano()))
 	waiter := make(chan *Order, 3)
-	var wg sync.WaitGroup
+	var waitgroup sync.WaitGroup
 	go cook("Remy", waiter)
 	go cook("Colette", waiter)
 	go cook("Linguini", waiter)
 	customers := []string{"Ani", "Bai", "Cat", "Dao", "Eve", "Fay", "Gus", "Hua", "Iza", "Jai"}
 	for _, name := range customers {
-		wg.Add(1)
-		go customer(name, waiter, &wg)
+		waitgroup.Add(1)
+		go customer(name, waiter, &waitgroup)
 	}
-	wg.Wait()
+	waitgroup.Wait()
 	log.Println("Restaurant closing")
 	close(waiter)
 }
