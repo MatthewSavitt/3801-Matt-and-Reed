@@ -9,9 +9,9 @@ import (
 )
 
 type Order struct {
-	id        uint64
-	customer  string
-	reply     chan *Order
+	id         uint64
+	customer   string
+	reply      chan *Order
 	preparedBy string
 }
 
@@ -61,18 +61,7 @@ func main() {
 	go cook("Remy", waiter)
 	go cook("Colette", waiter)
 	go cook("Linguini", waiter)
-	customers := []string{
-		"Ani", 
-		"Bai", 
-		"Cat", 
-		"Dao", 
-		"Eve", 
-		"Fay", 
-		"Gus", 
-		"Hua", 
-		"Iza", 
-		"Jai"
-	}
+	customers := []string{"Ani", "Bai", "Cat", "Dao", "Eve", "Fay", "Gus", "Hua", "Iza", "Jai"}
 	for _, name := range customers {
 		wg.Add(1)
 		go customer(name, waiter, &wg)
