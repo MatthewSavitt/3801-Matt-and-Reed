@@ -55,7 +55,7 @@ func customer(name string, waiter chan *Order, wg *sync.WaitGroup) {
 }
 
 func main() {
-	rand.Seed(time.Now().UnixNano())
+	rand.New(rand.NewSource(time.Now().UnixNano()))
 	waiter := make(chan *Order, 3)
 	var wg sync.WaitGroup
 	go cook("Remy", waiter)
